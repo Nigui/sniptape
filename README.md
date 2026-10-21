@@ -24,7 +24,11 @@ pnpm test
 
 ## Builds
 
-Windows installers are built by GitHub Actions on every push to `main` (see `.github/workflows/build.yml`).
+Windows installers are built by GitHub Actions when a `v*` tag is pushed (see `.github/workflows/build.yml`):
+
+```bash
+git tag v0.1.0 && git push origin v0.1.0
+```
 
 ## Disclaimer
 
