@@ -98,14 +98,14 @@ export function TrackCard({ track, onChange, onRemove }: Props) {
             checked={track.selected}
             disabled={track.status !== "ready"}
             onCheckedChange={(v) => onChange({ selected: v === true })}
-            aria-label="Select for download"
+            aria-label="Sélectionner pour le téléchargement"
           />
           {track.cover && (
             <img src={convertFileSrc(track.cover)} alt="" className="size-10 rounded-md object-cover" />
           )}
           <div className="grid flex-1 grid-cols-2 gap-2">
             <div className="grid gap-1">
-              <Label htmlFor={`title-${track.id}`} className="text-xs text-muted-foreground">Title</Label>
+              <Label htmlFor={`title-${track.id}`} className="text-xs text-muted-foreground">Titre</Label>
               <Input
                 id={`title-${track.id}`}
                 value={track.title}
@@ -114,7 +114,7 @@ export function TrackCard({ track, onChange, onRemove }: Props) {
               />
             </div>
             <div className="grid gap-1">
-              <Label htmlFor={`artist-${track.id}`} className="text-xs text-muted-foreground">Artist</Label>
+              <Label htmlFor={`artist-${track.id}`} className="text-xs text-muted-foreground">Artiste</Label>
               <Input
                 id={`artist-${track.id}`}
                 value={track.artist}
@@ -122,7 +122,7 @@ export function TrackCard({ track, onChange, onRemove }: Props) {
               />
             </div>
           </div>
-          <Button variant="ghost" size="icon" onClick={onRemove} aria-label="Remove">
+          <Button variant="ghost" size="icon" onClick={onRemove} aria-label="Retirer">
             <X />
           </Button>
         </div>
@@ -142,12 +142,12 @@ export function TrackCard({ track, onChange, onRemove }: Props) {
           <>
             <div ref={container} />
             <div className="flex items-center gap-3 text-sm text-muted-foreground tabular-nums">
-              <Button variant="outline" size="icon" onClick={togglePlay} aria-label={playing ? "Pause" : "Play"}>
+              <Button variant="outline" size="icon" onClick={togglePlay} aria-label={playing ? "Pause" : "Lecture"}>
                 {playing ? <Pause /> : <Play />}
               </Button>
-              <span>Start {formatTime(track.start)}</span>
-              <span>End {formatTime(track.end)}</span>
-              <span className="ml-auto">Length {formatTime(track.end - track.start)}</span>
+              <span>Début {formatTime(track.start)}</span>
+              <span>Fin {formatTime(track.end)}</span>
+              <span className="ml-auto">Durée {formatTime(track.end - track.start)}</span>
             </div>
           </>
         )}

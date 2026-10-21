@@ -98,7 +98,7 @@ export default function App() {
           <h1 className="text-lg font-semibold">Sniptape</h1>
           <Input
             value={input}
-            placeholder="Paste one or more YouTube links"
+            placeholder="Collez un ou plusieurs liens YouTube"
             onChange={(e) => setInput(e.target.value)}
             onPaste={(e) => {
               if (add(e.clipboardData.getData("text"))) {
@@ -111,7 +111,7 @@ export default function App() {
               if (add(input)) {
                 setInput("");
                 setError(null);
-              } else setError("No new YouTube link found.");
+              } else setError("Aucun nouveau lien YouTube trouvé.");
             }}
           />
           {error && <p className="text-sm text-destructive">{error}</p>}
@@ -120,7 +120,7 @@ export default function App() {
 
       <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-4 px-6 py-6">
         {tracks.length === 0 && (
-          <p className="py-16 text-center text-muted-foreground">Paste YouTube links above to get started.</p>
+          <p className="py-16 text-center text-muted-foreground">Collez des liens YouTube ci-dessus pour commencer.</p>
         )}
         {tracks.map((t) => (
           <TrackCard key={t.id} track={t} onChange={(p) => patch(t.id, p)} onRemove={() => remove(t.id)} />
@@ -130,10 +130,10 @@ export default function App() {
       {tracks.length > 0 && (
         <footer className="sticky bottom-0 border-t bg-background/90 px-6 py-3 backdrop-blur">
           <div className="mx-auto flex max-w-4xl items-center gap-3">
-            <span className="text-sm text-muted-foreground">{selected.length} selected</span>
+            <span className="text-sm text-muted-foreground">{selected.length} {selected.length > 1 ? "sélectionnés" : "sélectionné"}</span>
             <Button className="ml-auto" disabled={!selected.length || busy} onClick={download}>
               {busy ? <Loader2 className="animate-spin" /> : <Download />}
-              {selected.length > 1 ? `Download ZIP (${selected.length})` : "Download MP3"}
+              {selected.length > 1 ? `Télécharger le ZIP (${selected.length})` : "Télécharger le MP3"}
             </Button>
           </div>
         </footer>

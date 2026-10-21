@@ -42,7 +42,7 @@ function run(name: "yt-dlp" | "ffmpeg", args: string[], onLine?: (line: string) 
     cmd.on("close", ({ code }) =>
       code === 0
         ? resolve(out)
-        : reject(new Error(err.filter((l) => l.trim()).pop() ?? `${name} exited with code ${code}`)),
+        : reject(new Error(err.filter((l) => l.trim()).pop() ?? `${name} s'est arrêté avec le code ${code}`)),
     );
     cmd.spawn().catch(reject);
   });
@@ -79,7 +79,7 @@ export async function extract(videoId: string, onProgress: (ratio: number) => vo
     },
   );
   const json = lines.find((l) => l.startsWith("J "));
-  if (!json) throw new Error("yt-dlp returned no metadata");
+  if (!json) throw new Error("yt-dlp n'a renvoyé aucune métadonnée");
   const info = JSON.parse(json.slice(2));
   const cover = await join(dir, `${videoId}.jpg`);
   return {
