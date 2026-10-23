@@ -28,3 +28,10 @@ export function formatTime(seconds: number) {
   const sec = ((tenths % 600) / 10).toFixed(1).padStart(4, "0");
   return `${min}:${sec}`;
 }
+
+export function parseTime(text: string) {
+  const m = text.trim().replace(",", ".").match(/^(?:(\d+):)?(\d+(?:\.\d*)?)$/);
+  if (!m) return null;
+  const seconds = Number(m[1] ?? 0) * 60 + Number(m[2]);
+  return Number.isFinite(seconds) ? seconds : null;
+}

@@ -13,6 +13,7 @@
     "windows": [
       {
         "title": "Sniptape",
+        "hiddenTitle": true,
         "width": 1000,
         "height": 760,
         "minWidth": 640,
@@ -23,19 +24,13 @@
       "csp": null,
       "assetProtocol": {
         "enable": true,
-        "scope": [
-          "$APPCACHE/**"
-        ]
+        "scope": ["$APPCACHE/**"]
       }
     }
   },
   "bundle": {
     "active": true,
-    "targets": [
-      "app",
-      "dmg",
-      "nsis"
-    ],
+    "targets": ["app", "dmg", "nsis"],
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",
@@ -43,10 +38,6 @@
       "icons/icon.icns",
       "icons/icon.ico"
     ],
-    "externalBin": [
-      "binaries/yt-dlp",
-      "binaries/ffmpeg",
-      "binaries/deno"
-    ]
+    "externalBin": ["binaries/yt-dlp", "binaries/ffmpeg", "binaries/deno"]
   }
 }

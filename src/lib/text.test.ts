@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { formatTime, parseYoutubeIds, sanitizeFilename, uniqueName } from "./text.ts";
+import { formatTime, parseTime, parseYoutubeIds, sanitizeFilename, uniqueName } from "./text.ts";
 
 test("parseYoutubeIds", () => {
   const pasted = `
@@ -33,4 +33,13 @@ test("formatTime", () => {
   assert.equal(formatTime(0), "0:00.0");
   assert.equal(formatTime(59.96), "1:00.0");
   assert.equal(formatTime(125.44), "2:05.4");
+});
+
+test("parseTime", () => {
+  assert.equal(parseTime("1:05.3"), 65.3);
+  assert.equal(parseTime("0:08"), 8);
+  assert.equal(parseTime("12,5"), 12.5);
+  assert.equal(parseTime(" 2:00 "), 120);
+  assert.equal(parseTime("abc"), null);
+  assert.equal(parseTime("1:2:3"), null);
 });

@@ -25,3 +25,5 @@ dist-ssr
 
 src-tauri/binaries/
 .claude/settings.local.json
+.impeccable/mocks/
+.impeccable/review/

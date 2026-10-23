@@ -1,0 +1,404 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-23T08:50:07.453Z",
+  "title": "Design System: Sniptape",
+  "extensions": {
+    "colorMeta": {
+      "primary": {
+        "role": "primary",
+        "displayName": "Workbench Coral",
+        "canonical": "oklch(0.7 0.165 38)",
+        "tonalRamp": [
+          "oklch(0.15 0.165 38)",
+          "oklch(0.26 0.165 38)",
+          "oklch(0.37 0.165 38)",
+          "oklch(0.48 0.165 38)",
+          "oklch(0.6 0.165 38)",
+          "oklch(0.72 0.165 38)",
+          "oklch(0.84 0.165 38)",
+          "oklch(0.95 0.165 38)"
+        ],
+        "dark": "oklch(0.72 0.165 38)"
+      },
+      "primary-strong": {
+        "role": "primary",
+        "displayName": "Deep Coral",
+        "canonical": "oklch(0.56 0.17 35)",
+        "tonalRamp": [
+          "oklch(0.15 0.17 35)",
+          "oklch(0.26 0.17 35)",
+          "oklch(0.37 0.17 35)",
+          "oklch(0.48 0.17 35)",
+          "oklch(0.6 0.17 35)",
+          "oklch(0.72 0.17 35)",
+          "oklch(0.84 0.17 35)",
+          "oklch(0.95 0.17 35)"
+        ],
+        "dark": "oklch(0.84 0.11 45)"
+      },
+      "primary-foreground": {
+        "role": "primary",
+        "displayName": "Coral Ink",
+        "canonical": "oklch(0.2 0.03 35)",
+        "tonalRamp": [
+          "oklch(0.15 0.03 35)",
+          "oklch(0.26 0.03 35)",
+          "oklch(0.37 0.03 35)",
+          "oklch(0.48 0.03 35)",
+          "oklch(0.6 0.03 35)",
+          "oklch(0.72 0.03 35)",
+          "oklch(0.84 0.03 35)",
+          "oklch(0.95 0.03 35)"
+        ]
+      },
+      "background": {
+        "role": "neutral",
+        "displayName": "Linen Page",
+        "canonical": "oklch(0.968 0.006 60)",
+        "tonalRamp": [
+          "oklch(0.15 0.006 60)",
+          "oklch(0.26 0.006 60)",
+          "oklch(0.37 0.006 60)",
+          "oklch(0.48 0.006 60)",
+          "oklch(0.6 0.006 60)",
+          "oklch(0.72 0.006 60)",
+          "oklch(0.84 0.006 60)",
+          "oklch(0.95 0.006 60)"
+        ],
+        "dark": "oklch(0.17 0.008 40)"
+      },
+      "chrome": {
+        "role": "neutral",
+        "displayName": "Chrome Linen",
+        "canonical": "oklch(0.988 0.004 60)",
+        "tonalRamp": [
+          "oklch(0.15 0.004 60)",
+          "oklch(0.26 0.004 60)",
+          "oklch(0.37 0.004 60)",
+          "oklch(0.48 0.004 60)",
+          "oklch(0.6 0.004 60)",
+          "oklch(0.72 0.004 60)",
+          "oklch(0.84 0.004 60)",
+          "oklch(0.95 0.004 60)"
+        ],
+        "dark": "oklch(0.195 0.008 40)"
+      },
+      "card": {
+        "role": "neutral",
+        "displayName": "Card White",
+        "canonical": "oklch(1 0 0)",
+        "tonalRamp": [
+          "oklch(0.15 0 0)",
+          "oklch(0.26 0 0)",
+          "oklch(0.37 0 0)",
+          "oklch(0.48 0 0)",
+          "oklch(0.6 0 0)",
+          "oklch(0.72 0 0)",
+          "oklch(0.84 0 0)",
+          "oklch(0.95 0 0)"
+        ],
+        "dark": "oklch(0.225 0.009 40)"
+      },
+      "foreground": {
+        "role": "neutral",
+        "displayName": "Warm Ink",
+        "canonical": "oklch(0.22 0.015 40)",
+        "tonalRamp": [
+          "oklch(0.15 0.015 40)",
+          "oklch(0.26 0.015 40)",
+          "oklch(0.37 0.015 40)",
+          "oklch(0.48 0.015 40)",
+          "oklch(0.6 0.015 40)",
+          "oklch(0.72 0.015 40)",
+          "oklch(0.84 0.015 40)",
+          "oklch(0.95 0.015 40)"
+        ],
+        "dark": "oklch(0.955 0.006 60)"
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Warm Mist",
+        "canonical": "oklch(0.95 0.008 55)",
+        "tonalRamp": [
+          "oklch(0.15 0.008 55)",
+          "oklch(0.26 0.008 55)",
+          "oklch(0.37 0.008 55)",
+          "oklch(0.48 0.008 55)",
+          "oklch(0.6 0.008 55)",
+          "oklch(0.72 0.008 55)",
+          "oklch(0.84 0.008 55)",
+          "oklch(0.95 0.008 55)"
+        ],
+        "dark": "oklch(0.27 0.01 40)"
+      },
+      "muted-foreground": {
+        "role": "neutral",
+        "displayName": "Warm Slate",
+        "canonical": "oklch(0.49 0.015 45)",
+        "tonalRamp": [
+          "oklch(0.15 0.015 45)",
+          "oklch(0.26 0.015 45)",
+          "oklch(0.37 0.015 45)",
+          "oklch(0.48 0.015 45)",
+          "oklch(0.6 0.015 45)",
+          "oklch(0.72 0.015 45)",
+          "oklch(0.84 0.015 45)",
+          "oklch(0.95 0.015 45)"
+        ],
+        "dark": "oklch(0.73 0.01 50)"
+      },
+      "border": {
+        "role": "neutral",
+        "displayName": "Hairline",
+        "canonical": "oklch(0.905 0.008 55)",
+        "tonalRamp": [
+          "oklch(0.15 0.008 55)",
+          "oklch(0.26 0.008 55)",
+          "oklch(0.37 0.008 55)",
+          "oklch(0.48 0.008 55)",
+          "oklch(0.6 0.008 55)",
+          "oklch(0.72 0.008 55)",
+          "oklch(0.84 0.008 55)",
+          "oklch(0.95 0.008 55)"
+        ],
+        "dark": "oklch(1 0 0 / 9%)"
+      },
+      "input": {
+        "role": "neutral",
+        "displayName": "Field Stroke",
+        "canonical": "oklch(0.88 0.01 55)",
+        "tonalRamp": [
+          "oklch(0.15 0.01 55)",
+          "oklch(0.26 0.01 55)",
+          "oklch(0.37 0.01 55)",
+          "oklch(0.48 0.01 55)",
+          "oklch(0.6 0.01 55)",
+          "oklch(0.72 0.01 55)",
+          "oklch(0.84 0.01 55)",
+          "oklch(0.95 0.01 55)"
+        ],
+        "dark": "oklch(1 0 0 / 14%)"
+      },
+      "trim-dim": {
+        "role": "neutral",
+        "displayName": "Wash",
+        "canonical": "oklch(1 0 0 / 0.72)",
+        "tonalRamp": [
+          "oklch(0.15 0 0)",
+          "oklch(0.26 0 0)",
+          "oklch(0.37 0 0)",
+          "oklch(0.48 0 0)",
+          "oklch(0.6 0 0)",
+          "oklch(0.72 0 0)",
+          "oklch(0.84 0 0)",
+          "oklch(0.95 0 0)"
+        ],
+        "dark": "oklch(0.225 0.009 40 / 0.75)"
+      },
+      "destructive": {
+        "role": "tertiary",
+        "displayName": "Alarm Red",
+        "canonical": "oklch(0.55 0.2 27)",
+        "tonalRamp": [
+          "oklch(0.15 0.2 27)",
+          "oklch(0.26 0.2 27)",
+          "oklch(0.37 0.2 27)",
+          "oklch(0.48 0.2 27)",
+          "oklch(0.6 0.2 27)",
+          "oklch(0.72 0.2 27)",
+          "oklch(0.84 0.2 27)",
+          "oklch(0.95 0.2 27)"
+        ],
+        "dark": "oklch(0.7 0.18 25)"
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Kept duration on each track card; the headline number."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Track titles (inline editable) and the app name."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Paste field, artist line, empty state."
+      },
+      "body-sm": {
+        "displayName": "Body small",
+        "purpose": "Footer selection count, errors, extraction progress."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Time labels and fields, total duration, ghost buttons, time bubble (600)."
+      }
+    },
+    "shadows": [
+      {
+        "name": "card-lift",
+        "value": "0 1px 2px oklch(0.3 0.02 40 / 0.06), 0 8px 24px -12px oklch(0.3 0.02 40 / 0.18)",
+        "purpose": "Light theme: track cards, covers, paste field, trim grips."
+      },
+      {
+        "name": "card-lift-dark",
+        "value": "0 1px 2px oklch(0 0 0 / 0.3), 0 10px 28px -14px oklch(0 0 0 / 0.6)",
+        "purpose": "Dark theme value of the same token."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out-expo",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Single easing for entrance and settle motion."
+      },
+      {
+        "name": "wave-grow",
+        "value": "520ms cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Waveform bars scale from 15% height and fade in when a track is ready."
+      },
+      {
+        "name": "grip-settle",
+        "value": "320ms cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Released trim grip settles from 125% scale."
+      },
+      {
+        "name": "bubble-fade",
+        "value": "150ms",
+        "purpose": "Time bubble opacity while dragging."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "md",
+        "value": "768px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Action",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Coral pill in the sticky footer; the one primary action per screen.",
+      "html": "<button class=\"ds-btn-primary\"><svg viewBox=\"0 0 24 24\" width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 15V3\"/><path d=\"M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4\"/><path d=\"m7 10 5 5 5-5\"/></svg>Télécharger le ZIP (2)</button>",
+      "css": ".ds-btn-primary{display:inline-flex;align-items:center;gap:6px;height:44px;padding:0 24px;border:1px solid transparent;border-radius:9999px;background:var(--primary);color:var(--primary-foreground);font:500 14px/1 \"Nunito Variable\",ui-rounded,system-ui,sans-serif;cursor:pointer;transition:all .15s;outline:none}.ds-btn-primary:hover{background:color-mix(in oklch,var(--primary) 80%,transparent)}.ds-btn-primary:focus-visible{border-color:var(--ring);box-shadow:0 0 0 3px color-mix(in oklch,var(--ring) 50%,transparent)}.ds-btn-primary:active{transform:translateY(1px)}.ds-btn-primary:disabled{opacity:.5;pointer-events:none}"
+    },
+    {
+      "name": "Play Button",
+      "kind": "button",
+      "refersTo": "button-play",
+      "description": "36px coral circle that plays the kept region.",
+      "html": "<button class=\"ds-btn-play\" aria-label=\"Écouter\"><svg viewBox=\"0 0 24 24\" width=\"16\" height=\"16\" fill=\"currentColor\"><path d=\"M6 3v18l15-9z\"/></svg></button>",
+      "css": ".ds-btn-play{display:inline-grid;place-items:center;width:36px;height:36px;border:1px solid transparent;border-radius:9999px;background:var(--primary);color:var(--primary-foreground);cursor:pointer;transition:all .15s;outline:none}.ds-btn-play:hover{background:color-mix(in oklch,var(--primary) 80%,transparent)}.ds-btn-play:focus-visible{box-shadow:0 0 0 3px color-mix(in oklch,var(--ring) 50%,transparent)}.ds-btn-play:active{transform:translateY(1px)}"
+    },
+    {
+      "name": "Ghost Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Quiet secondary control (Ici, remove).",
+      "html": "<button class=\"ds-btn-ghost\">Ici</button>",
+      "css": ".ds-btn-ghost{height:24px;padding:0 8px;border:1px solid transparent;border-radius:0.6rem;background:transparent;color:var(--foreground);font:500 12px/1 \"Nunito Variable\",ui-rounded,system-ui,sans-serif;cursor:pointer;transition:all .15s;outline:none}.ds-btn-ghost:hover{background:var(--muted)}.ds-btn-ghost:focus-visible{border-color:var(--ring);box-shadow:0 0 0 3px color-mix(in oklch,var(--ring) 50%,transparent)}"
+    },
+    {
+      "name": "Paste Field",
+      "kind": "input",
+      "refersTo": "input-paste",
+      "description": "Borderless raised field in the top bar; the main entry point.",
+      "html": "<label class=\"ds-paste\"><svg viewBox=\"0 0 24 24\" width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\"><path d=\"M9 17H7A5 5 0 0 1 7 7h2\"/><path d=\"M15 7h2a5 5 0 1 1 0 10h-2\"/><line x1=\"8\" x2=\"16\" y1=\"12\" y2=\"12\"/></svg><input placeholder=\"Collez un ou plusieurs liens YouTube\"></label>",
+      "css": ".ds-paste{position:relative;display:block}.ds-paste svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--muted-foreground);pointer-events:none}.ds-paste input{width:100%;height:44px;padding:0 12px 0 40px;border:1px solid transparent;border-radius:1.05rem;background:var(--card);color:var(--foreground);box-shadow:var(--card-shadow);font:400 16px/1.5 \"Nunito Variable\",ui-rounded,system-ui,sans-serif;outline:none;transition:border-color .15s,box-shadow .15s}.ds-paste input::placeholder{color:var(--muted-foreground)}.ds-paste input:focus-visible{border-color:var(--ring);box-shadow:var(--card-shadow),0 0 0 3px color-mix(in oklch,var(--ring) 50%,transparent)}"
+    },
+    {
+      "name": "Time Field",
+      "kind": "input",
+      "refersTo": "input-time",
+      "description": "Small editable trim time, arrow keys step 0.1 s.",
+      "html": "<span class=\"ds-time\"><span>Début</span><input value=\"0:49.1\"></span>",
+      "css": ".ds-time{display:inline-flex;align-items:center;gap:6px;font:400 12px/1.33 \"Nunito Variable\",ui-rounded,system-ui,sans-serif;font-variant-numeric:tabular-nums}.ds-time span{color:var(--muted-foreground)}.ds-time input{width:4.5rem;height:28px;padding:0 8px;border:1px solid var(--input);border-radius:0.6rem;background:transparent;color:var(--foreground);text-align:center;font:inherit;outline:none}.ds-time input:focus-visible{border-color:var(--ring);box-shadow:0 0 0 3px color-mix(in oklch,var(--ring) 50%,transparent)}"
+    },
+    {
+      "name": "Checkbox",
+      "kind": "chip",
+      "refersTo": "checkbox-checked",
+      "description": "Track selection; coral when checked.",
+      "html": "<span class=\"ds-check\" role=\"checkbox\" aria-checked=\"true\" tabindex=\"0\"><svg viewBox=\"0 0 24 24\" width=\"14\" height=\"14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M20 6 9 17l-5-5\"/></svg></span>",
+      "css": ".ds-check{display:inline-grid;place-items:center;width:16px;height:16px;border:1px solid var(--primary);border-radius:4px;background:var(--primary);color:var(--primary-foreground);outline:none}.ds-check:focus-visible{box-shadow:0 0 0 3px color-mix(in oklch,var(--ring) 50%,transparent)}"
+    },
+    {
+      "name": "Track Card",
+      "kind": "card",
+      "refersTo": "track-card",
+      "description": "White raised card: cover, inline title/artist, kept duration as headline number.",
+      "html": "<article class=\"ds-card\"><div class=\"ds-cover\"></div><div class=\"ds-meta\"><div class=\"ds-title\">P'tit Loup fait des bêtises</div><div class=\"ds-artist\">P'tit Loup</div></div><div class=\"ds-dur\"><div class=\"ds-big\">2:51.4</div><div class=\"ds-of\">sur 2:51.4</div></div></article>",
+      "css": ".ds-card{display:flex;align-items:center;gap:16px;padding:16px;border-radius:1.35rem;background:var(--card);color:var(--foreground);box-shadow:var(--card-shadow);font-family:\"Nunito Variable\",ui-rounded,system-ui,sans-serif;font-variant-numeric:tabular-nums}.ds-cover{width:80px;height:80px;flex-shrink:0;border-radius:1.05rem;background:var(--muted);box-shadow:var(--card-shadow)}.ds-meta{flex:1;min-width:0}.ds-title{font-size:18px;font-weight:600;padding:4px 8px;border-radius:0.6rem}.ds-title:hover{background:var(--muted)}.ds-artist{padding:4px 8px;color:var(--muted-foreground)}.ds-dur{text-align:right}.ds-big{font-size:30px;font-weight:600;line-height:1}.ds-of{margin-top:4px;font-size:12px;color:var(--muted-foreground)}"
+    },
+    {
+      "name": "Waveform Trim",
+      "kind": "custom",
+      "refersTo": "trim-grip",
+      "description": "Signature: coral bar waveform, tinted kept region, washed cut ends, pill grips with a live time bubble.",
+      "html": "<div class=\"ds-trim\"><div class=\"ds-bars\"></div><div class=\"ds-kept\" style=\"left:20%;width:60%\"></div><div class=\"ds-dim\" style=\"left:0;width:20%\"></div><div class=\"ds-dim\" style=\"right:0;width:20%\"></div><div class=\"ds-grip\" style=\"left:20%\"><span class=\"ds-bubble\">0:49.1</span></div><div class=\"ds-grip\" style=\"left:80%\"></div></div>",
+      "css": ".ds-trim{position:relative;height:88px;margin-top:32px}.ds-bars{position:absolute;inset:0;background:repeating-linear-gradient(90deg,var(--primary) 0 3px,transparent 3px 5px);-webkit-mask:linear-gradient(transparent 20%,#000 20% 80%,transparent 80%);mask:linear-gradient(transparent 20%,#000 20% 80%,transparent 80%)}.ds-kept{position:absolute;top:0;bottom:0;border-radius:0.6rem;background:color-mix(in oklch,var(--primary) 10%,transparent)}.ds-dim{position:absolute;top:0;bottom:0;background:var(--trim-dim)}.ds-grip{position:absolute;top:0;bottom:0;width:2px;transform:translateX(-50%);background:var(--primary);cursor:ew-resize}.ds-grip::after{content:\"\";position:absolute;left:50%;top:50%;width:14px;height:36px;transform:translate(-50%,-50%);border:2px solid var(--primary);border-radius:9999px;background:var(--card);box-shadow:var(--card-shadow);box-sizing:border-box;transition:scale .32s cubic-bezier(0.16,1,0.3,1)}.ds-grip:hover::after{scale:1.1}.ds-bubble{position:absolute;top:-28px;left:50%;transform:translateX(-50%);padding:2px 8px;border-radius:9999px;background:var(--foreground);color:var(--background);font:600 12px/1.33 \"Nunito Variable\",ui-rounded,system-ui,sans-serif;font-variant-numeric:tabular-nums;white-space:nowrap}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Warm Workbench",
+    "overview": "A familiar track-list tool, refined: warm-tinted neutral grounds stacked in three quiet steps, white cards that lift one soft level off the page, and a single coral accent that carries everything the user acts on: the primary action, the play button, the waveform itself, the trim grips, the focus ring. The one owned moment is the trim: a full-width bar waveform with a coral kept region, ends washed back toward the card, and pill grips that show a live time bubble while dragged.\n\nDensity is calm and generous: one centred column, large covers, the kept duration set as the headline number of each card. Everything else (labels, secondary text, controls at rest) recedes into warm greys so the coral reads as \"this is what you can touch or what you keep\". Dark mode is a mirror on deep warm charcoal, not an inversion: the same three-step ground, the same coral nudged slightly brighter.\n\nRejected by the product brief and absent from the build: glass, decorative gradients, skeuomorphic tape or cassette costume, the stock grey shadcn utility look.",
+    "keyCharacteristics": [
+      "Three-step warm ground: page, chrome bars, white cards.",
+      "One coral accent for actions, the waveform, the kept region and focus.",
+      "Rounded variable sans (Nunito) with tabular figures everywhere.",
+      "Soft one-level shadow on cards, covers, grips and the paste field; no other elevation.",
+      "Pills for actions and handles; generous rounding on containers.",
+      "Motion only where it confirms state: waveform grow-in, grip settle; all gated on reduced motion."
+    ],
+    "rules": [
+      {
+        "name": "The One Coral Rule",
+        "body": "Coral marks what the user acts on or keeps, and nothing else. No coral headings, no coral decoration, no second accent hue.",
+        "section": "colors"
+      },
+      {
+        "name": "The Three Grounds Rule",
+        "body": "Depth comes from the ground stack: page (`background`), chrome bars (`chrome`), cards (`card`). A new surface picks one of the three; it does not invent a fourth tint.",
+        "section": "colors"
+      },
+      {
+        "name": "The Dark Text On Coral Rule",
+        "body": "Text and icons on a coral fill use `primary-foreground`, in both themes.",
+        "section": "colors"
+      },
+      {
+        "name": "The Tabular Time Rule",
+        "body": "`font-variant-numeric: tabular-nums` is set on `body`; every time, count and percentage inherits it so digits never jitter while dragging or playing.",
+        "section": "typography"
+      },
+      {
+        "name": "The One Family Rule",
+        "body": "Nunito Variable for everything. Weight 600 is the ceiling; emphasis comes from size, not heavier weights.",
+        "section": "typography"
+      },
+      {
+        "name": "The One Lift Rule",
+        "body": "One shadow level only. Nothing stacks above a card except the grip and the time bubble, and neither gets a stronger shadow.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do route every colour through the CSS custom properties in `src/index.css`; both themes are defined there and components never hard-code a theme.",
+      "Do keep coral for actions, the waveform, the kept region, checked state and focus only.",
+      "Do use `shadow-card` for anything that lifts off the ground, and nothing stronger.",
+      "Do shape pressable single objects (primary action, play, grips, bubbles) as full pills.",
+      "Do put text on coral in `primary-foreground`, never white.",
+      "Do gate every animation behind `prefers-reduced-motion: no-preference`, using `cubic-bezier(0.16, 1, 0.3, 1)`.",
+      "Do read waveform colours from the CSS variables at runtime and recolour on scheme change, as the track card does."
+    ],
+    "donts": [
+      "Don't add glass, backdrop blur or decorative gradients.",
+      "Don't dress the app as a tape or cassette.",
+      "Don't introduce a second accent hue or a fourth ground tint.",
+      "Don't fall back to the stock grey shadcn look (ring-outlined cards, neutral-grey base) for new surfaces.",
+      "Don't add a second display face; Nunito Variable carries every role."
+    ]
+  }
+}
