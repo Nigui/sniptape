@@ -124,6 +124,8 @@ export function TrackCard({ track, onChange, onRemove }: Props) {
   const [settle, setSettle] = useState({ start: 0, end: 0 });
   const onChangeRef = useRef(onChange);
   onChangeRef.current = onChange;
+  const trimRef = useRef({ start: track.start, end: track.end });
+  trimRef.current = { start: track.start, end: track.end };
 
   useEffect(() => {
     if (track.status !== "ready" || !container.current) return;
@@ -143,15 +145,18 @@ export function TrackCard({ track, onChange, onRemove }: Props) {
       plugins: [regions],
     });
     ws.on("decode", (duration) => {
-      const r = regions.addRegion({ start: 0, end: duration, drag: false, resize: true, color: "transparent" });
+      const kept = trimRef.current;
+      const end = kept.end > 0 ? Math.min(kept.end, duration) : duration;
+      const start = Math.min(kept.start, end);
+      const r = regions.addRegion({ start, end, drag: false, resize: true, color: "transparent" });
       region.current = r;
       setDecoded(true);
-      onChangeRef.current({ start: 0, end: duration, duration });
+      onChangeRef.current({ start, end, duration });
       r.on("update", () => {
         setDragging(true);
         onChangeRef.current({ start: r.start, end: r.end });
       });
-      let last = { start: 0, end: duration };
+      let last = { start, end };
       r.on("update-end", () => {
         setDragging(false);
         const moved = Math.abs(r.start - last.start) > Math.abs(r.end - last.end) ? "start" : "end";
