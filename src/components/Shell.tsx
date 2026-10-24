@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 
 export function AppHeader({ onAddLinks }: { onAddLinks?: () => void }) {
   return (
-    <header className="sticky top-0 z-10 border-b bg-chrome px-6 py-3">
+    <header className="shrink-0 border-b bg-chrome px-6 py-3">
       <div className="mx-auto flex max-w-4xl items-center gap-3">
         <h1 className="flex items-center gap-2 text-lg font-semibold">
           <svg viewBox="34 40 188 176" className="size-6 text-primary" aria-hidden>
@@ -115,7 +115,7 @@ export function PasteScreen({ links, newCount, changed, onPasteText, onRemoveLin
 
 export function AppFooter({ count, busy, onDownload }: { count: number; busy: boolean; onDownload: () => void }) {
   return (
-    <footer className="sticky bottom-0 border-t bg-chrome px-6 py-3">
+    <footer className="shrink-0 border-t bg-chrome px-6 py-3">
       <div className="mx-auto flex max-w-4xl items-center gap-3">
         <span className="text-sm text-muted-foreground">{count} {count > 1 ? "sélectionnés" : "sélectionné"}</span>
         <Button size="lg" className="ml-auto h-11 rounded-full px-6" disabled={!count || busy} onClick={onDownload}>

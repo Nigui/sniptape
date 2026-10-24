@@ -118,14 +118,16 @@ function Gallery() {
   if (new URLSearchParams(location.search).get("view") === "app") {
     const shown = [tracks[1], tracks[3], tracks[2]];
     return (
-      <div className="flex min-h-screen flex-col bg-background text-foreground">
+      <div className="flex h-screen flex-col overflow-hidden bg-background text-foreground">
         {p && <style>{paletteCss(p)}</style>}
         <AppHeader onAddLinks={() => {}} />
-        <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-4 px-6 py-6">
-          {shown.map(({ track }) => (
-            <LiveTrack key={track.id} initial={track} />
-          ))}
-        </main>
+        <div className="min-h-0 flex-1 overflow-y-auto">
+          <main className="mx-auto flex w-full max-w-4xl flex-col gap-4 px-6 py-6">
+            {shown.map(({ track }) => (
+              <LiveTrack key={track.id} initial={track} />
+            ))}
+          </main>
+        </div>
         <AppFooter count={2} busy={false} onDownload={() => {}} />
       </div>
     );

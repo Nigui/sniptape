@@ -110,10 +110,11 @@ export default function App() {
   const pasting = adding || tracks.length === 0;
 
   return (
-    <div className="flex min-h-screen flex-col bg-background text-foreground">
+    <div className="flex h-screen flex-col overflow-hidden bg-background text-foreground">
       <AppHeader onAddLinks={pasting ? undefined : openAdding} />
 
       {pasting ? (
+        <div className="flex min-h-0 flex-1 overflow-y-auto">
         <PasteScreen
           links={pending}
           newCount={newIds.length}
@@ -130,14 +131,17 @@ export default function App() {
               : undefined
           }
         />
+        </div>
       ) : (
         <>
-          <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-4 px-6 py-6">
-            {error && <p className="text-sm text-destructive">{error}</p>}
-            {tracks.map((t) => (
-              <TrackCard key={t.id} track={t} onChange={(p) => patch(t.id, p)} onRemove={() => remove(t.id)} />
-            ))}
-          </main>
+          <div className="min-h-0 flex-1 overflow-y-auto">
+            <main className="mx-auto flex w-full max-w-4xl flex-col gap-4 px-6 py-6">
+              {error && <p className="text-sm text-destructive">{error}</p>}
+              {tracks.map((t) => (
+                <TrackCard key={t.id} track={t} onChange={(p) => patch(t.id, p)} onRemove={() => remove(t.id)} />
+              ))}
+            </main>
+          </div>
           <AppFooter count={selected.length} busy={busy} onDownload={download} />
         </>
       )}
