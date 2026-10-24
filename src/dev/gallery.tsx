@@ -1,7 +1,8 @@
 import { useState, type ReactNode } from "react";
 import ReactDOM from "react-dom/client";
 import "../index.css";
-import { AppFooter, AppHeader, EmptyState } from "@/components/Shell";
+import { AppFooter, AppHeader, PasteScreen } from "@/components/Shell";
+import { parseYoutubeIds } from "@/lib/text";
 import { TrackCard, type Track } from "@/components/TrackCard";
 import sample from "./fixtures/sample.mp3?url";
 import cover1 from "./fixtures/cover-1.svg?url";
@@ -26,13 +27,13 @@ function paletteCss({ h, primary: [l, c], dark: [dl, dc] }: Palette) {
     --primary-ui: oklch(${l} ${c} ${h}); --primary-foreground: oklch(1 0 0); --primary-ui-foreground: oklch(1 0 0);
     --ring: oklch(${l} ${c} ${h}); --background: oklch(0.968 0.006 ${h}); --chrome: oklch(0.988 0.004 ${h});
     --foreground: oklch(0.22 0.015 ${h}); --card-foreground: oklch(0.22 0.015 ${h}); --muted-foreground: oklch(0.49 0.015 ${h});
-    --muted: oklch(0.95 0.008 ${h}); --secondary: oklch(0.95 0.008 ${h}); --border: oklch(0.905 0.008 ${h}); --input: oklch(0.64 0.012 ${h});`;
+    --muted: oklch(0.95 0.008 ${h}); --secondary: oklch(0.95 0.008 ${h}); --accent: oklch(0.94 0.03 ${h}); --accent-foreground: oklch(0.25 0.015 ${h}); --border: oklch(0.905 0.008 ${h}); --input: oklch(0.64 0.012 ${h});`;
   const dark = `
     --primary: oklch(${dl} ${dc} ${h}); --primary-strong: oklch(${dl + 0.1} ${dc * 0.7} ${h});
     --primary-ui: oklch(${dl} ${dc} ${h}); --primary-foreground: oklch(0.18 0.03 ${h}); --primary-ui-foreground: oklch(0.18 0.03 ${h});
     --ring: oklch(${dl} ${dc} ${h}); --background: oklch(0.17 0.008 ${h}); --chrome: oklch(0.195 0.008 ${h});
     --foreground: oklch(0.955 0.006 ${h}); --card: oklch(0.225 0.009 ${h}); --card-foreground: oklch(0.955 0.006 ${h});
-    --muted-foreground: oklch(0.73 0.01 ${h}); --muted: oklch(0.27 0.01 ${h}); --secondary: oklch(0.27 0.01 ${h}); --input: oklch(0.55 0.01 ${h}); --border: oklch(1 0 0 / 9%);`;
+    --muted-foreground: oklch(0.73 0.01 ${h}); --muted: oklch(0.27 0.01 ${h}); --secondary: oklch(0.27 0.01 ${h}); --accent: oklch(0.3 0.04 ${h}); --accent-foreground: oklch(0.955 0.006 ${h}); --input: oklch(0.55 0.01 ${h}); --border: oklch(1 0 0 / 9%);`;
   return `:root {${light}} @media (prefers-color-scheme: dark) { :root {${dark}} }`;
 }
 
@@ -84,8 +85,30 @@ function LiveTrack({ initial }: { initial: Track }) {
   return <TrackCard track={track} onChange={(p) => setTrack((t) => ({ ...t, ...p }))} onRemove={() => setTrack(initial)} />;
 }
 
+function LivePaste({ existing = [], initial = [], cancel }: { existing?: string[]; initial?: string[]; cancel?: boolean }) {
+  const [links, setLinks] = useState([...existing, ...initial]);
+  const newCount = links.filter((id) => !existing.includes(id)).length;
+  const changed = newCount > 0 || existing.some((id) => !links.includes(id));
+  return (
+    <div className="flex min-h-[420px] flex-col rounded-2xl border border-dashed">
+      <PasteScreen
+        links={links}
+        newCount={newCount}
+        changed={changed}
+        onPasteText={(text) => {
+          const ids = parseYoutubeIds(text);
+          setLinks((l) => [...l, ...ids.filter((id) => !l.includes(id))]);
+          return ids.length > 0;
+        }}
+        onRemoveLink={(id) => setLinks((l) => l.filter((x) => x !== id))}
+        onExtract={() => setLinks(existing)}
+        onCancel={cancel ? () => setLinks(existing) : undefined}
+      />
+    </div>
+  );
+}
+
 function Gallery() {
-  const [value, setValue] = useState("");
   const [palette, setPalette] = useState(() => new URLSearchParams(location.search).get("palette") ?? "current");
   const choose = (name: string) => {
     setPalette(name);
@@ -97,7 +120,7 @@ function Gallery() {
     return (
       <div className="flex min-h-screen flex-col bg-background text-foreground">
         {p && <style>{paletteCss(p)}</style>}
-        <AppHeader error={null} value={value} onChange={(e) => setValue(e.target.value)} />
+        <AppHeader onAddLinks={() => {}} />
         <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-4 px-6 py-6">
           {shown.map(({ track }) => (
             <LiveTrack key={track.id} initial={track} />
@@ -125,19 +148,24 @@ function Gallery() {
         </div>
 
         <Section title="Header">
-          <State label="Empty">
-            <AppHeader error={null} value={value} onChange={(e) => setValue(e.target.value)} />
+          <State label="Paste screen (no add button)">
+            <AppHeader />
           </State>
-          <State label="With text">
-            <AppHeader error={null} value="https://www.youtube.com/watch?v=abcdefghijk" readOnly />
-          </State>
-          <State label="With error">
-            <AppHeader error="Aucun nouveau lien YouTube trouvé." value="pas un lien" readOnly />
+          <State label="List mode">
+            <AppHeader onAddLinks={() => {}} />
           </State>
         </Section>
 
-        <Section title="Empty state">
-          <EmptyState />
+        <Section title="Paste screen">
+          <State label="First launch, empty (paste links here to try)">
+            <LivePaste />
+          </State>
+          <State label="Links detected">
+            <LivePaste initial={["abcdefghijk", "AbC-123_xyz", "q1w2e3r4t5y"]} />
+          </State>
+          <State label="Adding more links: 2 already in the list, Annuler visible (remove one to see Valider)">
+            <LivePaste existing={["zyxwvutsrqp", "Mn0pQr5sT6u"]} cancel />
+          </State>
         </Section>
 
         <Section title="Track card">

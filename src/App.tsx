@@ -3,7 +3,7 @@ import { join } from "@tauri-apps/api/path";
 import { save } from "@tauri-apps/plugin-dialog";
 import { mkdir, readFile, writeFile } from "@tauri-apps/plugin-fs";
 import { zipSync, type Zippable } from "fflate";
-import { AppFooter, AppHeader, EmptyState } from "@/components/Shell";
+import { AppFooter, AppHeader, PasteScreen } from "@/components/Shell";
 import { TrackCard, type Track } from "@/components/TrackCard";
 import { encodeMp3, extract, sessionDir } from "@/lib/media";
 import { parseYoutubeIds, sanitizeFilename, uniqueName } from "@/lib/text";
@@ -23,7 +23,8 @@ const message = (e: unknown) => (e instanceof Error ? e.message : String(e));
 
 export default function App() {
   const [tracks, setTracks] = useState<Track[]>([]);
-  const [input, setInput] = useState("");
+  const [pending, setPending] = useState<string[]>([]);
+  const [adding, setAdding] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const known = useRef(new Set<string>());
@@ -31,9 +32,27 @@ export default function App() {
   const patch = (id: string, p: Partial<Track>) =>
     setTracks((ts) => ts.map((t) => (t.id === id ? { ...t, ...p } : t)));
 
-  const add = (text: string) => {
-    const ids = parseYoutubeIds(text).filter((id) => !known.current.has(id));
-    if (!ids.length) return false;
+  const collect = (text: string) => {
+    const found = parseYoutubeIds(text);
+    if (!found.length) return false;
+    setPending((p) => [...p, ...found.filter((id) => !p.includes(id))]);
+    return true;
+  };
+
+  const openAdding = () => {
+    setPending(tracks.map((t) => t.id));
+    setAdding(true);
+  };
+
+  const newIds = pending.filter((id) => !known.current.has(id));
+  const removedIds = tracks.map((t) => t.id).filter((id) => !pending.includes(id));
+
+  const extractPending = () => {
+    const ids = newIds;
+    removedIds.forEach(remove);
+    setPending([]);
+    setAdding(false);
+    if (!ids.length) return;
     ids.forEach((id) => known.current.add(id));
     setTracks((ts) => [
       ...ts,
@@ -50,7 +69,6 @@ export default function App() {
         patch(id, { status: "error", error: message(e) });
       }
     });
-    return true;
   };
 
   const remove = (id: string) => {
@@ -89,35 +107,40 @@ export default function App() {
     }
   };
 
+  const pasting = adding || tracks.length === 0;
+
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground">
-      <AppHeader
-        error={error}
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        onPaste={(e) => {
-          if (add(e.clipboardData.getData("text"))) {
-            e.preventDefault();
-            setError(null);
+      <AppHeader onAddLinks={pasting ? undefined : openAdding} />
+
+      {pasting ? (
+        <PasteScreen
+          links={pending}
+          newCount={newIds.length}
+          changed={newIds.length > 0 || removedIds.length > 0}
+          onPasteText={collect}
+          onRemoveLink={(id) => setPending((p) => p.filter((x) => x !== id))}
+          onExtract={extractPending}
+          onCancel={
+            tracks.length
+              ? () => {
+                  setPending([]);
+                  setAdding(false);
+                }
+              : undefined
           }
-        }}
-        onKeyDown={(e) => {
-          if (e.key !== "Enter") return;
-          if (add(input)) {
-            setInput("");
-            setError(null);
-          } else setError("Aucun nouveau lien YouTube trouvé.");
-        }}
-      />
-
-      <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-4 px-6 py-6">
-        {tracks.length === 0 && <EmptyState />}
-        {tracks.map((t) => (
-          <TrackCard key={t.id} track={t} onChange={(p) => patch(t.id, p)} onRemove={() => remove(t.id)} />
-        ))}
-      </main>
-
-      {tracks.length > 0 && <AppFooter count={selected.length} busy={busy} onDownload={download} />}
+        />
+      ) : (
+        <>
+          <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-4 px-6 py-6">
+            {error && <p className="text-sm text-destructive">{error}</p>}
+            {tracks.map((t) => (
+              <TrackCard key={t.id} track={t} onChange={(p) => patch(t.id, p)} onRemove={() => remove(t.id)} />
+            ))}
+          </main>
+          <AppFooter count={selected.length} busy={busy} onDownload={download} />
+        </>
+      )}
     </div>
   );
 }
