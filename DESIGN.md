@@ -2,29 +2,31 @@
 name: Sniptape
 description: Paste YouTube links, trim each track on its waveform, save clean MP3s.
 colors:
-  primary: "oklch(0.7 0.165 38)"
-  primary-foreground: "oklch(0.2 0.03 35)"
-  primary-strong: "oklch(0.56 0.17 35)"
-  background: "oklch(0.968 0.006 60)"
-  chrome: "oklch(0.988 0.004 60)"
+  primary: "oklch(0.52 0.1 165)"
+  primary-foreground: "oklch(1 0 0)"
+  primary-strong: "oklch(0.42 0.1 165)"
+  background: "oklch(0.968 0.006 165)"
+  chrome: "oklch(0.988 0.004 165)"
   card: "oklch(1 0 0)"
-  foreground: "oklch(0.22 0.015 40)"
-  muted: "oklch(0.95 0.008 55)"
-  muted-foreground: "oklch(0.49 0.015 45)"
-  border: "oklch(0.905 0.008 55)"
-  input: "oklch(0.88 0.01 55)"
+  foreground: "oklch(0.22 0.015 165)"
+  muted: "oklch(0.95 0.008 165)"
+  muted-foreground: "oklch(0.49 0.015 165)"
+  border: "oklch(0.905 0.008 165)"
+  input: "oklch(0.64 0.012 165)"
   destructive: "oklch(0.55 0.2 27)"
   trim-dim: "oklch(1 0 0 / 0.72)"
-  primary-dark: "oklch(0.72 0.165 38)"
-  primary-strong-dark: "oklch(0.84 0.11 45)"
-  background-dark: "oklch(0.17 0.008 40)"
-  chrome-dark: "oklch(0.195 0.008 40)"
-  card-dark: "oklch(0.225 0.009 40)"
-  foreground-dark: "oklch(0.955 0.006 60)"
-  muted-dark: "oklch(0.27 0.01 40)"
-  muted-foreground-dark: "oklch(0.73 0.01 50)"
+  primary-dark: "oklch(0.74 0.11 165)"
+  primary-foreground-dark: "oklch(0.18 0.03 165)"
+  primary-strong-dark: "oklch(0.84 0.077 165)"
+  background-dark: "oklch(0.17 0.008 165)"
+  chrome-dark: "oklch(0.195 0.008 165)"
+  card-dark: "oklch(0.225 0.009 165)"
+  foreground-dark: "oklch(0.955 0.006 165)"
+  muted-dark: "oklch(0.27 0.01 165)"
+  muted-foreground-dark: "oklch(0.73 0.01 165)"
+  input-dark: "oklch(0.55 0.01 165)"
   destructive-dark: "oklch(0.7 0.18 25)"
-  trim-dim-dark: "oklch(0.225 0.009 40 / 0.75)"
+  trim-dim-dark: "oklch(0.225 0.009 165 / 0.75)"
 typography:
   display:
     fontFamily: "Nunito Variable, ui-rounded, -apple-system, Segoe UI, system-ui, sans-serif"
@@ -138,15 +140,15 @@ components:
 
 **Creative North Star: "The Warm Workbench"**
 
-A familiar track-list tool, refined: warm-tinted neutral grounds stacked in three quiet steps, white cards that lift one soft level off the page, and a single coral accent that carries everything the user acts on: the primary action, the play button, the waveform itself, the trim grips, the focus ring. The one owned moment is the trim: a full-width bar waveform with a coral kept region, ends washed back toward the card, and pill grips that show a live time bubble while dragged.
+A familiar track-list tool, refined: pine-tinted neutral grounds stacked in three quiet steps, white cards that lift one soft level off the page, and a single pine accent that carries everything the user acts on: the primary action, the play button, the waveform itself, the trim grips, the focus ring. The one owned moment is the trim: a full-width bar waveform with a pine kept region, ends washed back toward the card, and pill grips that show a live time bubble while dragged.
 
-Density is calm and generous: one centred column, large covers, the kept duration set as the headline number of each card. Everything else (labels, secondary text, controls at rest) recedes into warm greys so the coral reads as "this is what you can touch or what you keep". Dark mode is a mirror on deep warm charcoal, not an inversion: the same three-step ground, the same coral nudged slightly brighter.
+Density is calm and generous: one centred column, large covers, the kept duration set as the headline number of each card. Everything else (labels, secondary text, controls at rest) recedes into faintly green greys so the pine reads as "this is what you can touch or what you keep". Dark mode is a mirror on deep pine-tinted charcoal, not an inversion: the same three-step ground, the pine lifted to a lighter tone that carries dark text.
 
 Rejected by the product brief and absent from the build: glass, decorative gradients, skeuomorphic tape or cassette costume, the stock grey shadcn utility look.
 
 **Key Characteristics:**
-- Three-step warm ground: page, chrome bars, white cards.
-- One coral accent for actions, the waveform, the kept region and focus.
+- Three-step pine-tinted ground: page, chrome bars, white cards.
+- One pine accent for actions, the waveform, the kept region and focus.
 - Rounded variable sans (Nunito) with tabular figures everywhere.
 - Soft one-level shadow on cards, covers, grips and the paste field; no other elevation.
 - Pills for actions and handles; generous rounding on containers.
@@ -154,31 +156,36 @@ Rejected by the product brief and absent from the build: glass, decorative gradi
 
 ## Colors
 
-A warm-neutral ground (hue 40-60, near-zero chroma) carrying one saturated coral.
+Near-neutral grounds tinted toward the accent's hue (165, chroma 0.004-0.015) carrying one mid-chroma pine.
 
 ### Primary
-- **Workbench Coral** (`primary`): the only accent. Fills the primary action button, the play button and checked checkboxes; draws the waveform bars, the trim grip outlines and lines, and the focus ring (`ring` = primary). Also tints the kept region at 10% and text selection at 32%, and sets `accent-color` and `caret-color` at the root.
-- **Deep Coral** (`primary-strong`): the waveform's played-progress colour, so playback reads as a darker pass over the coral bars. In dark mode it flips to a pale peach (`primary-strong-dark`) so played bars read lighter rather than darker.
-- **Coral Ink** (`primary-foreground`): near-black warm brown used for text and icons on coral. Coral surfaces never carry white text.
+- **Sniptape Pine** (`primary`): the only accent. Fills the primary action button, the play button and checked checkboxes; draws the waveform bars, the trim grip outlines and lines, and the focus ring (`ring` = primary). Also tints the kept region at 10% and text selection at 32%, and sets `accent-color` and `caret-color` at the root. In dark mode it lifts to a light pine (`primary-dark`). Grips and the checked checkbox read it through the `primary-ui` alias, which holds the same value in both themes.
+- **Deep Pine** (`primary-strong`): the waveform's played-progress colour, so playback reads as a darker pass over the pine bars. In dark mode it flips to a pale pine (`primary-strong-dark`) so played bars read lighter rather than darker.
+- **On-Pine** (`primary-foreground`): text and icons on a pine fill. White in light mode; deep pine ink (`primary-foreground-dark`) in dark mode, where the fill is light.
+
+Measured contrast: pine on white 5.23:1; white on the pine button 5.23:1; dark-mode pine on the dark card 7.76:1; dark text on dark-mode pine 8.51:1.
+
+### Brand alignment
+The UI pine is the logo pine: `primary` renders as the symbol colour (#1C7B5A) and `primary-dark` as the light pine used for the symbol on dark grounds (#5FC199). The wordmark ink (#141D19) belongs to the logo files only, not to the UI palette. Logo assets and their usage rules live in `design/logo/final/`.
 
 ### Neutral
-- **Linen Page** (`background`): the main scroll ground behind the track column.
-- **Chrome Linen** (`chrome`): the sticky top bar and sticky footer, one step lighter than the page.
+- **Fog Page** (`background`): the main scroll ground behind the track column.
+- **Chrome Fog** (`chrome`): the sticky top bar and sticky footer, one step lighter than the page.
 - **Card White** (`card`): track cards, the paste field, grip bodies; the top step of the ground.
-- **Warm Ink** (`foreground`): primary text, the waveform playhead (2px), and the inverted time bubble.
-- **Warm Mist** (`muted` / `secondary`): ghost-button and inline-field hover, cover placeholder, progress-bar track.
-- **Warm Slate** (`muted-foreground`): artist line, labels ("Début", "Fin"), the "sur" total duration, empty-state and helper copy.
+- **Pine Ink** (`foreground`): primary text, the waveform playhead (2px), and the inverted time bubble.
+- **Pale Sage** (`muted` / `secondary`): ghost-button and inline-field hover, cover placeholder, progress-bar track.
+- **Grey Sage** (`muted-foreground`): artist line, labels ("Début", "Fin"), the "sur" total duration, empty-state and helper copy.
 - **Hairline** (`border`): the single dividers under the top bar and above the footer.
-- **Field Stroke** (`input`): the outline of the small time fields.
+- **Field Stroke** (`input`): the outline of the small time fields and unchecked checkboxes.
 - **Wash** (`trim-dim`): a translucent card-coloured veil laid over the cut ends of the waveform.
 - **Alarm Red** (`destructive`): error text only (link parse failures, extraction failures).
 
 ### Named Rules
-**The One Coral Rule.** Coral marks what the user acts on or keeps, and nothing else. No coral headings, no coral decoration, no second accent hue.
+**The One Pine Rule.** Pine marks what the user acts on or keeps, and nothing else. No pine headings, no pine decoration, no second accent hue.
 
 **The Three Grounds Rule.** Depth comes from the ground stack: page (`background`), chrome bars (`chrome`), cards (`card`). A new surface picks one of the three; it does not invent a fourth tint.
 
-**The Dark Text On Coral Rule.** Text and icons on a coral fill use `primary-foreground`, in both themes.
+**The On-Pine Rule.** Text and icons on a pine fill use `primary-foreground`, in both themes; it is white on the light-mode pine and deep pine ink on the dark-mode pine. Never hard-code either.
 
 ## Typography
 
@@ -212,23 +219,23 @@ The primary action lives at the bottom right of the sticky footer; the selection
 Hybrid: tonal layering does most of the work (the three grounds), and one soft two-layer shadow lifts the things you handle. There is exactly one shadow token, `--card-shadow` (exposed as Tailwind `shadow-card`), defined per theme.
 
 ### Shadow Vocabulary
-- **Card lift** (light: `0 1px 2px oklch(0.3 0.02 40 / 0.06), 0 8px 24px -12px oklch(0.3 0.02 40 / 0.18)`; dark: `0 1px 2px oklch(0 0 0 / 0.3), 0 10px 28px -14px oklch(0 0 0 / 0.6)`): track cards, cover art, the paste field, trim grips.
+- **Card lift** (light: `0 1px 2px oklch(0.3 0.02 165 / 0.06), 0 8px 24px -12px oklch(0.3 0.02 165 / 0.18)`; dark: `0 1px 2px oklch(0 0 0 / 0.3), 0 10px 28px -14px oklch(0 0 0 / 0.6)`): track cards, cover art, the paste field, trim grips.
 
 ### Named Rules
 **The One Lift Rule.** One shadow level only. Nothing stacks above a card except the grip and the time bubble, and neither gets a stronger shadow.
 
 ## Shapes
 
-Generous, soft rounding derived from one base radius (`--radius: 0.75rem`) with multiplier steps. Containers round most (cards 1.35rem, covers and the paste field 1.05rem), small fields least (time fields and the kept-region tint 0.6rem). Everything the user presses or drags as a single object is a full pill: the primary action, the play button, the trim grips, the time bubble. Borders are rare: hairline dividers on chrome bars, a thin stroke on time fields, and a 2px coral outline on grips. The paste field and title fields are borderless.
+Generous, soft rounding derived from one base radius (`--radius: 0.75rem`) with multiplier steps. Containers round most (cards 1.35rem, covers and the paste field 1.05rem), small fields least (time fields and the kept-region tint 0.6rem). Everything the user presses or drags as a single object is a full pill: the primary action, the play button, the trim grips, the time bubble. Borders are rare: hairline dividers on chrome bars, a thin stroke on time fields, and a 2px pine outline on grips. The paste field and title fields are borderless.
 
 ## Components
 
 ### Buttons
 Pills for primary actions, quiet ghosts for secondary ones.
 - **Shape:** primary actions and play are full pills (`rounded.pill`); stock shadcn buttons keep `rounded.lg`.
-- **Primary:** coral fill, `primary-foreground` text, 44px tall, 24px horizontal padding, leading 16px icon (download, or spinning loader while busy).
-- **Play:** 36px coral circle with a filled play/pause glyph.
-- **Hover / Focus:** primary fades to 80% coral on hover; focus shows a 3px ring at 50% coral; active nudges down 1px; disabled drops to 50% opacity.
+- **Primary:** pine fill, `primary-foreground` text, 44px tall, 24px horizontal padding, leading 16px icon (download, or spinning loader while busy).
+- **Play:** 36px pine circle with a filled play/pause glyph in `primary-foreground`.
+- **Hover / Focus:** focus shows a 3px ring at 50% pine; active nudges down 1px; disabled drops to 50% opacity. Hover switches the fill to Deep Pine (`primary-strong`): darker in light mode (white label 7.9:1), lighter in dark mode (dark label 11.8:1).
 - **Ghost:** no fill at rest, `muted` fill on hover. Used for the remove (X) icon button and the "Ici" set-to-playhead buttons.
 
 ### Cards / Containers
@@ -240,37 +247,37 @@ Pills for primary actions, quiet ghosts for secondary ones.
 
 ### Inputs / Fields
 - **Paste field:** borderless `card` surface with card lift, `rounded.xl`, 44px tall, 16px text, link icon inset at left in `muted-foreground`. The one prominent field.
-- **Inline title / artist:** transparent and borderless at rest so they read as text; `muted` fill on hover, `card` fill and coral ring on focus. Long titles truncate with an ellipsis.
+- **Inline title / artist:** transparent and borderless at rest so they read as text; `muted` fill on hover, `card` fill and pine ring on focus. Long titles truncate with an ellipsis.
 - **Time fields:** 28px tall, 4.5rem wide, `rounded.md`, centred label-size text, `input` stroke. Arrow keys step 0.1 s, Shift steps 1 s.
-- **Focus:** coral border and 3px coral ring at 50% everywhere.
+- **Focus:** pine border and 3px pine ring at 50% everywhere.
 - **Error:** `destructive` text below the field or in the card; no red boxes.
 
 ### Checkbox
-16px, `rounded.check` (4px), `input` stroke at rest; checked fills coral with a `primary-foreground` check. Its hit area is extended by a pseudo-element.
+16px, `rounded.check` (4px), `input` stroke at rest; checked fills pine with a `primary-foreground` check. Its hit area is extended by a pseudo-element.
 
 ### Progress
-4px-6px pill track in `muted` with a coral fill; shown with a right-aligned "Extraction… N %" label while a track loads.
+4px-6px pill track in `muted` with a pine fill; shown with a right-aligned "Extraction… N %" label while a track loads.
 
 ### Waveform Trim (signature)
 The owned moment of the product.
-- **Waveform:** 88px tall bar waveform drawn in coral, played portion in `primary-strong`, 2px `foreground` playhead.
-- **Kept region:** a 10% coral tint behind the bars between the grips, `rounded.md`.
+- **Waveform:** 88px tall bar waveform drawn in pine, played portion in `primary-strong`, 2px `foreground` playhead.
+- **Kept region:** a 10% pine tint behind the bars between the grips, `rounded.md`.
 - **Cut ends:** veiled by `trim-dim` so cut audio stays visible but clearly discarded.
-- **Grips:** 14x36px pill, `card` body, 2px coral outline, card lift, on a 2px coral vertical line; 20px invisible drag hit zone (`ew-resize`).
+- **Grips:** 14x36px pill, `card` body, 2px pine outline, card lift, on a 2px pine vertical line; 20px invisible drag hit zone (`ew-resize`).
 - **Time bubble:** inverted pill (`foreground` fill, `background` text, label 600) above each grip, visible only while dragging, fades in 150ms; clamps to the edge near the ends.
 - **Motion:** bars grow in from 15% height on ready (520ms, `cubic-bezier(0.16, 1, 0.3, 1)`); a released grip settles from 125% scale (320ms, same curve). Both only under `prefers-reduced-motion: no-preference`.
 
 ### Top Bar and Footer
-Sticky `chrome` bars with a hairline. The top bar carries the app mark (three rounded coral bars, an inline SVG) with the name in title type, then the paste field. The footer carries the selection count and the primary action.
+Sticky `chrome` bars with a hairline. The top bar carries the app mark in pine with the name in title type, then the paste field. The footer carries the selection count and the primary action.
 
 ## Do's and Don'ts
 
 ### Do:
 - **Do** route every colour through the CSS custom properties in `src/index.css`; both themes are defined there and components never hard-code a theme.
-- **Do** keep coral for actions, the waveform, the kept region, checked state and focus only.
+- **Do** keep pine for actions, the waveform, the kept region, checked state and focus only.
 - **Do** use `shadow-card` for anything that lifts off the ground, and nothing stronger.
 - **Do** shape pressable single objects (primary action, play, grips, bubbles) as full pills.
-- **Do** put text on coral in `primary-foreground`, never white.
+- **Do** put text on pine in `primary-foreground`, which resolves to white in light mode and deep pine ink in dark mode.
 - **Do** gate every animation behind `prefers-reduced-motion: no-preference`, using `cubic-bezier(0.16, 1, 0.3, 1)`.
 - **Do** read waveform colours from the CSS variables at runtime and recolour on scheme change, as the track card does.
 

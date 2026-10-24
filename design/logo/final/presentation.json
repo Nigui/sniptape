@@ -1,0 +1,34 @@
+{
+  "brand": "Sniptape",
+  "tagline": "YouTube audio to trimmed MP3s, on your desktop",
+  "brief": "A free, local desktop app for parents: paste YouTube links, trim the start and end of each track, save MP3s onto a child's SD card. It must feel simple and trustworthy, crafted and precise, and work as a Windows/macOS app icon at 16–32 px.",
+  "adjectives": ["simple", "trustworthy", "crafted", "precise"],
+  "criteria": "Success: avoids the play-button and music-note clichés, reads at 16 px, works in one colour, and connects to the app's trim gesture.",
+  "mockups": ["app-icon", "favicon-tab", "readme", "website", "sticker", "social"],
+  "nav": ["Télécharger", "GitHub"],
+  "brand_color": "#1C7B5A",
+  "tile_color": "#1C7B5A",
+  "greyscale": false,
+  "designer": "Sniptape",
+  "round": 4,
+  "concepts": [
+    {
+      "name": "Capsule",
+      "symbol": "sniptape-symbol.svg",
+      "lockup": "sniptape-horizontal.svg",
+      "symbol_on_tile": "icons/sniptape-symbol-app-icon.svg",
+      "idea": "The kept sound, punched out of a rounded capsule, with the trimmed-off ends right beside it.",
+      "rationale": [
+        "Tells the product story: keep the middle, cut the ends",
+        "A solid, rounded silhouette that holds up as an app icon",
+        "A dedicated small-size version keeps it clean at 16–32 px"
+      ]
+    }
+  ],
+  "recommendation": "Capsule in pine #1C7B5A (5.2:1 on white), with the lighter pine #5FC199 on dark backgrounds.",
+  "next_steps": [
+    "Replace the Tauri app icons with the new mark",
+    "Use the horizontal lockup in the app header and README",
+    "Run a trademark search before public release"
+  ]
+}

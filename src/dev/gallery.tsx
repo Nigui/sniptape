@@ -10,6 +10,32 @@ import cover3 from "./fixtures/cover-3.svg?url";
 
 Object.assign(window, { __TAURI_INTERNALS__: { convertFileSrc: (path: string) => path } });
 
+type Palette = { h: number; primary: [number, number]; dark: [number, number] };
+
+const palettes: Record<string, Palette | null> = {
+  current: null,
+  pine: { h: 165, primary: [0.52, 0.1], dark: [0.74, 0.11] },
+  berry: { h: 355, primary: [0.53, 0.17], dark: [0.74, 0.14] },
+  ultramarine: { h: 262, primary: [0.47, 0.19], dark: [0.74, 0.12] },
+  petrol: { h: 225, primary: [0.48, 0.09], dark: [0.74, 0.1] },
+};
+
+function paletteCss({ h, primary: [l, c], dark: [dl, dc] }: Palette) {
+  const light = `
+    --primary: oklch(${l} ${c} ${h}); --primary-strong: oklch(${l - 0.1} ${c} ${h});
+    --primary-ui: oklch(${l} ${c} ${h}); --primary-foreground: oklch(1 0 0); --primary-ui-foreground: oklch(1 0 0);
+    --ring: oklch(${l} ${c} ${h}); --background: oklch(0.968 0.006 ${h}); --chrome: oklch(0.988 0.004 ${h});
+    --foreground: oklch(0.22 0.015 ${h}); --card-foreground: oklch(0.22 0.015 ${h}); --muted-foreground: oklch(0.49 0.015 ${h});
+    --muted: oklch(0.95 0.008 ${h}); --secondary: oklch(0.95 0.008 ${h}); --border: oklch(0.905 0.008 ${h}); --input: oklch(0.64 0.012 ${h});`;
+  const dark = `
+    --primary: oklch(${dl} ${dc} ${h}); --primary-strong: oklch(${dl + 0.1} ${dc * 0.7} ${h});
+    --primary-ui: oklch(${dl} ${dc} ${h}); --primary-foreground: oklch(0.18 0.03 ${h}); --primary-ui-foreground: oklch(0.18 0.03 ${h});
+    --ring: oklch(${dl} ${dc} ${h}); --background: oklch(0.17 0.008 ${h}); --chrome: oklch(0.195 0.008 ${h});
+    --foreground: oklch(0.955 0.006 ${h}); --card: oklch(0.225 0.009 ${h}); --card-foreground: oklch(0.955 0.006 ${h});
+    --muted-foreground: oklch(0.73 0.01 ${h}); --muted: oklch(0.27 0.01 ${h}); --secondary: oklch(0.27 0.01 ${h}); --input: oklch(0.55 0.01 ${h}); --border: oklch(1 0 0 / 9%);`;
+  return `:root {${light}} @media (prefers-color-scheme: dark) { :root {${dark}} }`;
+}
+
 const base: Track = {
   id: "demo",
   status: "ready",
@@ -60,10 +86,43 @@ function LiveTrack({ initial }: { initial: Track }) {
 
 function Gallery() {
   const [value, setValue] = useState("");
+  const [palette, setPalette] = useState(() => new URLSearchParams(location.search).get("palette") ?? "current");
+  const choose = (name: string) => {
+    setPalette(name);
+    history.replaceState(null, "", `?palette=${name}`);
+  };
+  const p = palettes[palette];
+  if (new URLSearchParams(location.search).get("view") === "app") {
+    const shown = [tracks[1], tracks[3], tracks[2]];
+    return (
+      <div className="flex min-h-screen flex-col bg-background text-foreground">
+        {p && <style>{paletteCss(p)}</style>}
+        <AppHeader error={null} value={value} onChange={(e) => setValue(e.target.value)} />
+        <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-4 px-6 py-6">
+          {shown.map(({ track }) => (
+            <LiveTrack key={track.id} initial={track} />
+          ))}
+        </main>
+        <AppFooter count={2} busy={false} onDownload={() => {}} />
+      </div>
+    );
+  }
   return (
-    <div className="min-h-screen bg-background pb-24 text-foreground">
+    <div key={palette} className="min-h-screen bg-background pb-24 text-foreground">
+      {p && <style>{paletteCss(p)}</style>}
       <div className="mx-auto flex max-w-5xl flex-col gap-12 px-6 py-10">
         <h1 className="text-2xl font-semibold">Sniptape — component gallery (dev only)</h1>
+        <div className="flex flex-wrap gap-2">
+          {Object.keys(palettes).map((name) => (
+            <button
+              key={name}
+              onClick={() => choose(name)}
+              className={`rounded-full border px-3 py-1 text-sm ${name === palette ? "border-primary-ui bg-primary text-primary-foreground" : "bg-card"}`}
+            >
+              {name}
+            </button>
+          ))}
+        </div>
 
         <Section title="Header">
           <State label="Empty">

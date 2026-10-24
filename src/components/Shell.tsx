@@ -8,10 +8,8 @@ export function AppHeader({ error, ...input }: { error: string | null } & Compon
     <header className="sticky top-0 z-10 border-b bg-chrome px-6 py-4">
       <div className="mx-auto flex max-w-4xl flex-col gap-3">
         <h1 className="flex items-center gap-2 text-lg font-semibold">
-          <svg viewBox="0 0 20 20" className="size-5 text-primary" aria-hidden>
-            <rect x="2" y="7" width="3" height="6" rx="1.5" fill="currentColor" />
-            <rect x="8.5" y="3" width="3" height="14" rx="1.5" fill="currentColor" />
-            <rect x="15" y="6" width="3" height="8" rx="1.5" fill="currentColor" />
+          <svg viewBox="34 40 188 176" className="size-6 text-primary" aria-hidden>
+            <path fill="currentColor" fillRule="evenodd" d="M72 96.0 A56.0 56.0 0 0 1 184 96.0 V160.0 A56.0 56.0 0 0 1 72 160.0 Z M102.0 102.0 A10.0 10.0 0 0 1 122.0 102.0 V154.0 A10.0 10.0 0 0 1 102.0 154.0 Z M134.0 86.0 A10.0 10.0 0 0 1 154.0 86.0 V170.0 A10.0 10.0 0 0 1 134.0 170.0 Z M34.0 104.0 A12.0 12.0 0 0 1 58.0 104.0 V152.0 A12.0 12.0 0 0 1 34.0 152.0 Z M198.0 104.0 A12.0 12.0 0 0 1 222.0 104.0 V152.0 A12.0 12.0 0 0 1 198.0 152.0 Z" />
           </svg>
           Sniptape
         </h1>

@@ -42,7 +42,8 @@ A local desktop app instead of a website: nothing is uploaded to a third-party s
 - Name: Sniptape.
 - Interface language: French only. The current UI copy is English and must be translated.
 - Open-source under MIT; bundled programs keep their own licenses (THIRD_PARTY_NOTICES.md).
-- Visual direction: the category standard, refined to the craft level of Spotify / Apple Music and Descript / GarageBand, with one coral accent. A tape or cassette theme was considered and dropped.
+- Visual direction: the category standard, refined to the craft level of Spotify / Apple Music and Descript / GarageBand, with one pine green accent (#1C7B5A). Coral was dropped because it reads as the default of AI-built tools; a tape or cassette theme was also considered and dropped.
+- Logo: the "Capsule" mark (kept waveform punched out of a capsule, offcut bars beside it) with a Nunito Bold wordmark; kit in design/logo/final/.
 
 ## Evidence on Hand
 
