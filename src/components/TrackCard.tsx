@@ -3,11 +3,10 @@ import WaveSurfer from "wavesurfer.js";
 import RegionsPlugin, { type Region } from "wavesurfer.js/dist/plugins/regions.esm.js";
 import { convertFileSrc } from "@tauri-apps/api/core";
 import { openUrl } from "@tauri-apps/plugin-opener";
-import { Music, Pause, Play, SlidersHorizontal, X } from "lucide-react";
+import { Loader2, Music, Pause, Play, SlidersHorizontal, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
-import { Progress } from "@/components/ui/progress";
 import { Slider } from "@/components/ui/slider";
 import { formatTime, parseTime } from "@/lib/text";
 import { cn } from "@/lib/utils";
@@ -201,10 +200,43 @@ export function TrackCard({ track, onChange, onRemove }: Props) {
     openUrl(sourceUrl).catch(() => window.open(sourceUrl, "_blank"));
   };
 
+  const sourceLabel = sourceUrl.replace("https://www.", "");
+  const sourceLink = (
+    <a
+      href={sourceUrl}
+      onClick={(e) => {
+        e.preventDefault();
+        openSource();
+      }}
+      className="relative truncate text-xs text-muted-foreground underline-offset-2 hover:underline"
+    >
+      {sourceLabel}
+    </a>
+  );
+
+  if (track.status === "loading")
+    return (
+      <article aria-busy className="relative flex items-center gap-3 overflow-hidden rounded-2xl bg-card py-2 pr-2 pl-4 shadow-card">
+        <div
+          role="progressbar"
+          aria-label={`Extraction de ${sourceLabel}`}
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-valuenow={Math.round(track.progress * 100)}
+          className="absolute inset-y-0 left-0 bg-accent transition-[width] duration-500 ease-out"
+          style={{ width: `${track.progress * 100}%` }}
+        />
+        <Loader2 className="relative size-4 shrink-0 text-primary-ui motion-safe:animate-spin" aria-hidden />
+        {sourceLink}
+        <Button variant="ghost" size="icon" className="relative ml-auto" onClick={onRemove} aria-label={`Retirer ${sourceLabel}`}>
+          <X />
+        </Button>
+      </article>
+    );
+
   const name = track.title || track.id;
   const startSynced = Math.abs(position - track.start) < 0.05;
   const endSynced = Math.abs(position - track.end) < 0.05;
-  const loading = track.status === "loading";
   const start = pct(track.start, track.duration);
   const end = pct(track.end, track.duration);
 
@@ -223,7 +255,7 @@ export function TrackCard({ track, onChange, onRemove }: Props) {
           <Input
             aria-label={`Titre de la piste « ${name} »`}
             value={track.title}
-            placeholder={loading ? "Chargement du titre…" : "Titre"}
+            placeholder="Titre"
             onChange={(e) => onChange({ title: e.target.value })}
             className={cn(fieldClass, "text-lg font-semibold md:text-lg")}
           />
@@ -234,16 +266,7 @@ export function TrackCard({ track, onChange, onRemove }: Props) {
             onChange={(e) => onChange({ artist: e.target.value })}
             className={cn(fieldClass, "text-muted-foreground")}
           />
-          <a
-            href={sourceUrl}
-            onClick={(e) => {
-              e.preventDefault();
-              openSource();
-            }}
-            className="self-start truncate px-2 text-xs text-muted-foreground underline-offset-2 hover:underline"
-          >
-            {sourceUrl.replace("https://www.", "")}
-          </a>
+          <div className="flex px-2">{sourceLink}</div>
         </div>
 
         {track.status === "ready" && decoded && (
@@ -266,13 +289,6 @@ export function TrackCard({ track, onChange, onRemove }: Props) {
           </Button>
         </div>
       </div>
-
-      {loading && (
-        <div className="flex items-center gap-3 text-sm text-muted-foreground">
-          <Progress value={track.progress * 100} className="h-1.5 flex-1" />
-          <span className="w-28 text-right">Extraction… {Math.round(track.progress * 100)} %</span>
-        </div>
-      )}
 
       {track.status === "error" && <p className="text-sm text-destructive">{track.error}</p>}
 
