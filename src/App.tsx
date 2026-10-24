@@ -64,7 +64,7 @@ export default function App() {
     pool(ids, CONCURRENT_EXTRACTIONS, async (id) => {
       try {
         const x = await extract(id, (progress) => patch(id, { progress }));
-        patch(id, { ...x, status: "ready", selected: true, end: x.duration });
+        patch(id, { ...x, status: "ready", selected: false, end: x.duration });
       } catch (e) {
         patch(id, { status: "error", error: message(e) });
       }

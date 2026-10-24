@@ -2,11 +2,13 @@ import { useEffect, useRef, useState } from "react";
 import WaveSurfer from "wavesurfer.js";
 import RegionsPlugin, { type Region } from "wavesurfer.js/dist/plugins/regions.esm.js";
 import { convertFileSrc } from "@tauri-apps/api/core";
-import { Music, Pause, Play, X } from "lucide-react";
+import { openUrl } from "@tauri-apps/plugin-opener";
+import { Music, Pause, Play, SlidersHorizontal, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
+import { Slider } from "@/components/ui/slider";
 import { formatTime, parseTime } from "@/lib/text";
 import { cn } from "@/lib/utils";
 
@@ -38,14 +40,7 @@ const pct = (t: number, duration: number) => (duration > 0 ? (t / duration) * 10
 
 const MIN_LENGTH = 0.5;
 
-function TimeField(props: {
-  label: string;
-  trackTitle: string;
-  value: number;
-  onCommit: (t: number) => number;
-  onHere: () => void;
-}) {
-  const { label, trackTitle, value, onCommit, onHere } = props;
+function PositionField({ value, label, onCommit }: { value: number; label: string; onCommit: (t: number) => void }) {
   const [text, setText] = useState(formatTime(value));
   const [editing, setEditing] = useState(false);
   useEffect(() => {
@@ -54,38 +49,28 @@ function TimeField(props: {
 
   const commit = () => {
     const t = parseTime(text);
-    setText(formatTime(t === null ? value : onCommit(t)));
+    if (t !== null) onCommit(t);
     setEditing(false);
   };
 
   return (
-    <div className="flex items-center gap-1.5">
-      <span className="text-xs text-muted-foreground">{label}</span>
-      <Input
-        value={text}
-        inputMode="decimal"
-        aria-label={`${label} de « ${trackTitle} » (flèches : ±0,1 s, Maj : ±1 s)`}
-        className="h-7 w-[4.5rem] rounded-md px-2 text-center text-xs md:text-xs"
-        onFocus={() => setEditing(true)}
-        onChange={(e) => setText(e.target.value)}
-        onBlur={commit}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") return e.currentTarget.blur();
-          if (e.key !== "ArrowUp" && e.key !== "ArrowDown") return;
-          e.preventDefault();
-          const step = (e.shiftKey ? 1 : 0.1) * (e.key === "ArrowUp" ? 1 : -1);
-          setText(formatTime(onCommit((parseTime(text) ?? value) + step)));
-        }}
-      />
-      <Button
-        variant="ghost"
-        size="xs"
-        onClick={onHere}
-        aria-label={`Placer le ${label.toLowerCase()} de « ${trackTitle} » à la position de lecture`}
-      >
-        Ici
-      </Button>
-    </div>
+    <Input
+      value={text}
+      inputMode="decimal"
+      aria-label={`${label} (flèches : ±0,1 s, Maj : ±1 s)`}
+      className="h-8 w-20 rounded-md px-2 text-center text-sm md:text-sm"
+      onFocus={() => setEditing(true)}
+      onChange={(e) => setText(e.target.value)}
+      onBlur={commit}
+      onKeyDown={(e) => {
+        if (e.key === "Enter") return e.currentTarget.blur();
+        if (e.key !== "ArrowUp" && e.key !== "ArrowDown") return;
+        e.preventDefault();
+        const next = (parseTime(text) ?? value) + (e.shiftKey ? 1 : 0.1) * (e.key === "ArrowUp" ? 1 : -1);
+        setText(formatTime(Math.max(0, next)));
+        onCommit(next);
+      }}
+    />
   );
 }
 
@@ -122,6 +107,8 @@ export function TrackCard({ track, onChange, onRemove }: Props) {
   const [decoded, setDecoded] = useState(false);
   const [dragging, setDragging] = useState(false);
   const [settle, setSettle] = useState({ start: 0, end: 0 });
+  const [position, setPosition] = useState(0);
+  const [advanced, setAdvanced] = useState(false);
   const onChangeRef = useRef(onChange);
   onChangeRef.current = onChange;
   const trimRef = useRef({ start: track.start, end: track.end });
@@ -140,8 +127,8 @@ export function TrackCard({ track, onChange, onRemove }: Props) {
       normalize: true,
       waveColor: cssColor("--primary"),
       progressColor: cssColor("--primary-strong"),
-      cursorColor: cssColor("--foreground"),
-      cursorWidth: 2,
+      cursorWidth: 0,
+      interact: false,
       plugins: [regions],
     });
     ws.on("decode", (duration) => {
@@ -170,9 +157,9 @@ export function TrackCard({ track, onChange, onRemove }: Props) {
       ws.setOptions({
         waveColor: cssColor("--primary"),
         progressColor: cssColor("--primary-strong"),
-        cursorColor: cssColor("--foreground"),
       });
     scheme.addEventListener("change", recolor);
+    ws.on("timeupdate", (t) => setPosition(t));
     ws.on("play", () => setPlaying(true));
     ws.on("pause", () => setPlaying(false));
     wave.current = ws;
@@ -203,13 +190,20 @@ export function TrackCard({ track, onChange, onRemove }: Props) {
     return which === "start" ? start : end;
   };
 
-  const setTrimHere = (which: "start" | "end") => {
-    const ws = wave.current;
-    if (ws) setTrim(which, ws.getCurrentTime());
+  const seek = (t: number) => {
+    const clamped = Math.min(Math.max(0, t), track.duration);
+    wave.current?.setTime(clamped);
+    setPosition(clamped);
+  };
+
+  const sourceUrl = `https://www.youtube.com/watch?v=${track.id}`;
+  const openSource = () => {
+    openUrl(sourceUrl).catch(() => window.open(sourceUrl, "_blank"));
   };
 
   const name = track.title || track.id;
-  const untrimmed = track.start < 0.05 && track.end > track.duration - 0.05;
+  const startSynced = Math.abs(position - track.start) < 0.05;
+  const endSynced = Math.abs(position - track.end) < 0.05;
   const loading = track.status === "loading";
   const start = pct(track.start, track.duration);
   const end = pct(track.end, track.duration);
@@ -240,6 +234,16 @@ export function TrackCard({ track, onChange, onRemove }: Props) {
             onChange={(e) => onChange({ artist: e.target.value })}
             className={cn(fieldClass, "text-muted-foreground")}
           />
+          <a
+            href={sourceUrl}
+            onClick={(e) => {
+              e.preventDefault();
+              openSource();
+            }}
+            className="self-start truncate px-2 text-xs text-muted-foreground underline-offset-2 hover:underline"
+          >
+            {sourceUrl.replace("https://www.", "")}
+          </a>
         </div>
 
         {track.status === "ready" && decoded && (
@@ -273,17 +277,17 @@ export function TrackCard({ track, onChange, onRemove }: Props) {
       {track.status === "error" && <p className="text-sm text-destructive">{track.error}</p>}
 
       {track.status === "ready" && (
-        <div className="flex items-center gap-4">
-          <Button
-            size="icon-lg"
-            onClick={togglePlay}
-            aria-label={`${playing ? "Pause" : "Écouter"} « ${name} »`}
-            className="shrink-0 rounded-full"
-          >
-            {playing ? <Pause className="fill-current" /> : <Play className="fill-current" />}
-          </Button>
-          <div className="relative flex-1">
-            <div className="relative" role="group" aria-label={`Découpe de « ${name} »`}>
+        <div className="flex flex-col gap-3 select-none">
+          <div className="flex items-center gap-4">
+            <Button
+              size="icon-lg"
+              onClick={togglePlay}
+              aria-label={`${playing ? "Pause" : "Écouter"} « ${name} »`}
+              className="shrink-0 rounded-full"
+            >
+              {playing ? <Pause className="fill-current" /> : <Play className="fill-current" />}
+            </Button>
+            <div className="relative flex-1" role="group" aria-label={`Découpe de « ${name} »`}>
               {decoded && (
                 <div
                   className="pointer-events-none absolute inset-y-0 rounded-md bg-primary/10"
@@ -300,16 +304,64 @@ export function TrackCard({ track, onChange, onRemove }: Props) {
                 </>
               )}
             </div>
-            <div className="mt-2 flex items-center justify-between gap-4">
-              <TimeField label="Début" trackTitle={name} value={track.start} onCommit={(t) => setTrim("start", t)} onHere={() => setTrimHere("start")} />
-              {decoded && untrimmed && (
-                <p className="text-center text-xs text-muted-foreground">
-                  Faites glisser les poignées orange pour couper le début et la fin.
-                </p>
-              )}
-              <TimeField label="Fin" trackTitle={name} value={track.end} onCommit={(t) => setTrim("end", t)} onHere={() => setTrimHere("end")} />
-            </div>
+            <div className="w-8 shrink-0" />
           </div>
+
+          <div className="flex items-center gap-4">
+            <div className="w-9 shrink-0" />
+            <Slider
+              className="flex-1"
+              min={0}
+              max={track.duration || 1}
+              step={0.1}
+              value={[position]}
+              onValueChange={([v]) => seek(v)}
+              disabled={!decoded}
+              aria-label={`Position de lecture de « ${name} »`}
+            />
+            <Button
+              variant="ghost"
+              size="icon-sm"
+              className={cn("shrink-0", advanced ? "text-primary-ui" : "text-muted-foreground")}
+              onClick={() => setAdvanced((a) => !a)}
+              aria-expanded={advanced}
+              aria-label={`Réglage précis de « ${name} »`}
+            >
+              <SlidersHorizontal />
+            </Button>
+          </div>
+
+          {advanced && (
+            <div className="flex flex-wrap items-center gap-2 pl-13">
+              <span className="text-sm text-muted-foreground">Position</span>
+              <PositionField value={position} label={`Position de lecture de « ${name} »`} onCommit={seek} />
+              <Button variant="ghost" size="sm" className="rounded-full" disabled={startSynced} onClick={() => seek(track.start)}>
+                Aller au début
+              </Button>
+              <Button variant="ghost" size="sm" className="rounded-full" disabled={endSynced} onClick={() => seek(track.end)}>
+                Aller à la fin
+              </Button>
+              <span className="mx-1 h-5 w-px bg-border" aria-hidden />
+              <Button
+                variant="outline"
+                size="sm"
+                className="rounded-full"
+                disabled={startSynced || position > track.end - MIN_LENGTH}
+                onClick={() => setTrim("start", position)}
+              >
+                Couper avant
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                className="rounded-full"
+                disabled={endSynced || position < track.start + MIN_LENGTH}
+                onClick={() => setTrim("end", position)}
+              >
+                Couper après
+              </Button>
+            </div>
+          )}
         </div>
       )}
     </article>

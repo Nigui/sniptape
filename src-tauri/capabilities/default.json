@@ -2,7 +2,9 @@
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "default",
   "description": "Capability for the main window",
-  "windows": ["main"],
+  "windows": [
+    "main"
+  ],
   "permissions": [
     "core:default",
     "dialog:allow-save",
@@ -11,14 +13,36 @@
     "fs:allow-mkdir",
     "fs:allow-remove",
     "fs:allow-exists",
-    { "identifier": "fs:scope", "allow": ["$APPCACHE", "$APPCACHE/**"] },
+    {
+      "identifier": "fs:scope",
+      "allow": [
+        "$APPCACHE",
+        "$APPCACHE/**"
+      ]
+    },
     {
       "identifier": "shell:allow-spawn",
       "allow": [
-        { "name": "binaries/yt-dlp", "sidecar": true, "args": true },
-        { "name": "binaries/ffmpeg", "sidecar": true, "args": true }
+        {
+          "name": "binaries/yt-dlp",
+          "sidecar": true,
+          "args": true
+        },
+        {
+          "name": "binaries/ffmpeg",
+          "sidecar": true,
+          "args": true
+        }
       ]
     },
-    "shell:allow-kill"
+    "shell:allow-kill",
+    {
+      "identifier": "opener:allow-open-url",
+      "allow": [
+        {
+          "url": "https://www.youtube.com/*"
+        }
+      ]
+    }
   ]
 }
