@@ -117,7 +117,6 @@ export function AppFooter({ count, busy, onDownload }: { count: number; busy: bo
   return (
     <footer className="shrink-0 border-t bg-chrome px-6 py-3">
       <div className="mx-auto flex max-w-4xl items-center gap-3">
-        <span className="text-sm text-muted-foreground">{count} {count > 1 ? "sélectionnés" : "sélectionné"}</span>
         <Button size="lg" className="ml-auto h-11 rounded-full px-6" disabled={!count || busy} onClick={onDownload}>
           {busy ? <Loader2 className="animate-spin" /> : <Download />}
           {count > 1 ? `Télécharger le ZIP (${count})` : "Télécharger le MP3"}

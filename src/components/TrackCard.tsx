@@ -3,11 +3,13 @@ import WaveSurfer from "wavesurfer.js";
 import RegionsPlugin, { type Region } from "wavesurfer.js/dist/plugins/regions.esm.js";
 import { convertFileSrc } from "@tauri-apps/api/core";
 import { openUrl } from "@tauri-apps/plugin-opener";
-import { Loader2, Music, Pause, Play, SlidersHorizontal, X } from "lucide-react";
+import { ArrowLeftToLine, ArrowRightToLine, Loader2, Music, Pause, Play, SlidersHorizontal, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
+import { Tooltip } from "@/components/ui/tooltip";
+import { TrimEndIcon, TrimStartIcon } from "@/components/icons";
 import { formatTime, parseTime } from "@/lib/text";
 import { cn } from "@/lib/utils";
 
@@ -351,31 +353,23 @@ export function TrackCard({ track, onChange, onRemove }: Props) {
             <div className="flex flex-wrap items-center gap-2 pl-13">
               <span className="text-sm text-muted-foreground">Position</span>
               <PositionField value={position} label={`Position de lecture de « ${name} »`} onCommit={seek} />
-              <Button variant="ghost" size="sm" className="rounded-full" disabled={startSynced} onClick={() => seek(track.start)}>
-                Aller au début
-              </Button>
-              <Button variant="ghost" size="sm" className="rounded-full" disabled={endSynced} onClick={() => seek(track.end)}>
-                Aller à la fin
-              </Button>
-              <span className="mx-1 h-5 w-px bg-border" aria-hidden />
-              <Button
-                variant="outline"
-                size="sm"
-                className="rounded-full"
-                disabled={startSynced || position > track.end - MIN_LENGTH}
-                onClick={() => setTrim("start", position)}
-              >
-                Couper avant
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                className="rounded-full"
-                disabled={endSynced || position < track.start + MIN_LENGTH}
-                onClick={() => setTrim("end", position)}
-              >
-                Couper après
-              </Button>
+              {[
+                { label: "Aller au début", icon: <ArrowLeftToLine />, disabled: startSynced, run: () => seek(track.start) },
+                { label: "Aller à la fin", icon: <ArrowRightToLine />, disabled: endSynced, run: () => seek(track.end) },
+                null,
+                { label: "Couper avant", icon: <TrimStartIcon />, disabled: startSynced || position > track.end - MIN_LENGTH, run: () => setTrim("start", position) },
+                { label: "Couper après", icon: <TrimEndIcon />, disabled: endSynced || position < track.start + MIN_LENGTH, run: () => setTrim("end", position) },
+              ].map((a, i) =>
+                a ? (
+                  <Tooltip key={a.label} label={a.label}>
+                    <Button variant="ghost" size="icon-sm" disabled={a.disabled} onClick={a.run} aria-label={a.label}>
+                      {a.icon}
+                    </Button>
+                  </Tooltip>
+                ) : (
+                  <span key={i} className="mx-1 h-5 w-px bg-border" aria-hidden />
+                ),
+              )}
             </div>
           )}
         </div>
