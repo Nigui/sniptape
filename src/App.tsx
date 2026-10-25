@@ -61,14 +61,21 @@ export default function App() {
         title: "", artist: "", duration: 0, audio: "", cover: null, start: 0, end: 0,
       })),
     ]);
-    pool(ids, CONCURRENT_EXTRACTIONS, async (id) => {
-      try {
-        const x = await extract(id, (progress) => patch(id, { progress }));
-        patch(id, { ...x, status: "ready", selected: false, end: x.duration });
-      } catch (e) {
-        patch(id, { status: "error", error: message(e) });
-      }
-    });
+    pool(ids, CONCURRENT_EXTRACTIONS, extractOne);
+  };
+
+  const extractOne = async (id: string) => {
+    try {
+      const x = await extract(id, (progress) => patch(id, { progress }));
+      patch(id, { ...x, status: "ready", selected: false, end: x.duration });
+    } catch (e) {
+      patch(id, { status: "error", error: message(e) });
+    }
+  };
+
+  const retry = (id: string) => {
+    patch(id, { status: "loading", progress: 0, error: undefined });
+    extractOne(id);
   };
 
   const remove = (id: string) => {
@@ -138,7 +145,7 @@ export default function App() {
             <main className="mx-auto flex w-full max-w-4xl flex-col gap-4 px-6 py-6">
               {error && <p className="text-sm text-destructive">{error}</p>}
               {tracks.map((t) => (
-                <TrackCard key={t.id} track={t} onChange={(p) => patch(t.id, p)} onRemove={() => remove(t.id)} />
+                <TrackCard key={t.id} track={t} onChange={(p) => patch(t.id, p)} onRemove={() => remove(t.id)} onRetry={() => retry(t.id)} />
               ))}
             </main>
           </div>

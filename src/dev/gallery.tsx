@@ -82,7 +82,7 @@ function State({ label, children }: { label: string; children: ReactNode }) {
 
 function LiveTrack({ initial }: { initial: Track }) {
   const [track, setTrack] = useState(initial);
-  return <TrackCard track={track} onChange={(p) => setTrack((t) => ({ ...t, ...p }))} onRemove={() => setTrack(initial)} />;
+  return <TrackCard track={track} onChange={(p) => setTrack((t) => ({ ...t, ...p }))} onRemove={() => setTrack(initial)} onRetry={() => setTrack({ ...initial, status: "loading", progress: 0 })} />;
 }
 
 function LivePaste({ existing = [], initial = [], cancel }: { existing?: string[]; initial?: string[]; cancel?: boolean }) {

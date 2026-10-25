@@ -14,7 +14,8 @@ function Tooltip({ children, label, side = "top", className }: { children: React
             side={side}
             sideOffset={6}
             className={cn(
-              "z-50 rounded-full bg-foreground px-2.5 py-1 text-xs font-semibold text-background",
+              "z-50 max-w-sm rounded-full bg-foreground px-2.5 py-1 text-xs font-semibold text-background",
+              label.length > 48 && "rounded-xl px-3 py-2 font-medium",
               "animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95"
             )}
           >

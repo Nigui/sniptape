@@ -3,7 +3,7 @@ import WaveSurfer from "wavesurfer.js";
 import RegionsPlugin, { type Region } from "wavesurfer.js/dist/plugins/regions.esm.js";
 import { convertFileSrc } from "@tauri-apps/api/core";
 import { openUrl } from "@tauri-apps/plugin-opener";
-import { ArrowLeftToLine, ArrowRightToLine, Loader2, Music, Pause, Play, SlidersHorizontal, X } from "lucide-react";
+import { ArrowLeftToLine, ArrowRightToLine, Check, CircleAlert, Copy, Loader2, Music, RotateCw, Pause, Play, SlidersHorizontal, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
@@ -32,6 +32,7 @@ type Props = {
   track: Track;
   onChange: (patch: Partial<Track>) => void;
   onRemove: () => void;
+  onRetry: () => void;
 };
 
 const cssColor = (name: string) =>
@@ -111,7 +112,7 @@ function Grip({ at, time, active, settle }: { at: number; time: number; active: 
   );
 }
 
-export function TrackCard({ track, onChange, onRemove }: Props) {
+export function TrackCard({ track, onChange, onRemove, onRetry }: Props) {
   const container = useRef<HTMLDivElement>(null);
   const wave = useRef<WaveSurfer | null>(null);
   const region = useRef<Region | null>(null);
@@ -127,6 +128,7 @@ export function TrackCard({ track, onChange, onRemove }: Props) {
   const editStart = useRef("");
   positionRef.current = position;
   const [advanced, setAdvanced] = useState(false);
+  const [copied, setCopied] = useState(false);
   const onChangeRef = useRef(onChange);
   onChangeRef.current = onChange;
   const trimRef = useRef({ start: track.start, end: track.end });
@@ -235,34 +237,84 @@ export function TrackCard({ track, onChange, onRemove }: Props) {
     </a>
   );
 
-  if (track.status === "loading")
+  const removeButton = (label: string) => (
+    <Tooltip label={`Retirer (${REMOVE_KEY})`}>
+      <Button tabIndex={-1} variant="ghost" size="icon" onClick={onRemove} aria-label={`Retirer ${label}`}>
+        <X />
+      </Button>
+    </Tooltip>
+  );
+
+  const copyError = () =>
+    navigator.clipboard.writeText(track.error ?? "").then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    });
+
+  if (track.status !== "ready") {
+    const failed = track.status === "error";
     return (
       <article
         tabIndex={0}
-        aria-busy
-        aria-keyshortcuts={isMac ? "Meta+Backspace" : "Control+Delete"}
+        aria-busy={!failed}
+        aria-label={sourceLabel}
+        aria-keyshortcuts={[isMac ? "Meta+Backspace" : "Control+Delete", failed && "R"].filter(Boolean).join(" ")}
         onKeyDown={(e) => {
-          if (e.target !== e.currentTarget || !isRemove(e)) return;
+          if (e.target !== e.currentTarget) return;
+          if (isRemove(e)) onRemove();
+          else if (failed && e.key.toLowerCase() === "r" && !e.metaKey && !e.ctrlKey && !e.altKey) onRetry();
+          else return;
           e.preventDefault();
-          onRemove();
         }}
-        className={cn(cardClass, "relative flex items-center gap-3 overflow-hidden py-2 pr-2 pl-4")}>
-        <div
-          role="progressbar"
-          aria-label={`Extraction de ${sourceLabel}`}
-          aria-valuemin={0}
-          aria-valuemax={100}
-          aria-valuenow={Math.round(track.progress * 100)}
-          className="absolute inset-y-0 left-0 bg-accent transition-[width] duration-500 ease-out"
-          style={{ width: `${track.progress * 100}%` }}
-        />
-        <Loader2 className="relative size-4 shrink-0 text-primary-ui motion-safe:animate-spin" aria-hidden />
+        onFocus={(e) => {
+          if (e.target !== e.currentTarget) cardRef.current?.focus();
+        }}
+        ref={cardRef}
+        className={cn(cardClass, "relative flex items-center gap-3 overflow-hidden py-2 pr-2 pl-4")}
+      >
+        {failed ? (
+          <>
+            <CircleAlert className="size-4 shrink-0 text-destructive" aria-hidden />
+            <Tooltip label={track.error || "Erreur inconnue"}>
+              <span className="text-sm font-semibold text-destructive">Échec de l’extraction</span>
+            </Tooltip>
+          </>
+        ) : (
+          <>
+            <div
+              role="progressbar"
+              aria-label={`Extraction de ${sourceLabel}`}
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-valuenow={Math.round(track.progress * 100)}
+              className="absolute inset-y-0 left-0 bg-accent transition-[width] duration-500 ease-out"
+              style={{ width: `${track.progress * 100}%` }}
+            />
+            <Loader2 className="relative size-4 shrink-0 text-primary-ui motion-safe:animate-spin" aria-hidden />
+          </>
+        )}
         {sourceLink}
-        <Button tabIndex={-1} variant="ghost" size="icon" className="relative ml-auto" onClick={onRemove} aria-label={`Retirer ${sourceLabel}`}>
-          <X />
-        </Button>
+        <div className="relative ml-auto flex shrink-0 items-center gap-1">
+          {failed && (
+            <>
+              <Tooltip label={copied ? "Copié" : "Copier le message d’erreur"}>
+                <Button tabIndex={-1} variant="ghost" size="icon" onClick={copyError} aria-label="Copier le message d’erreur">
+                  {copied ? <Check /> : <Copy />}
+                </Button>
+              </Tooltip>
+              <Tooltip label="Réessayer (R)">
+                <Button tabIndex={-1} variant="outline" size="sm" className="rounded-full" onClick={onRetry}>
+                  <RotateCw />
+                  Réessayer
+                </Button>
+              </Tooltip>
+            </>
+          )}
+          {removeButton(sourceLabel)}
+        </div>
       </article>
     );
+  }
 
   const name = track.title || track.id;
   const startSynced = Math.abs(position - track.start) < 0.05;
@@ -360,15 +412,9 @@ export function TrackCard({ track, onChange, onRemove }: Props) {
               className="mx-2"
             />
           </Tooltip>
-          <Tooltip label={`Retirer (${REMOVE_KEY})`}>
-            <Button tabIndex={-1} variant="ghost" size="icon" onClick={onRemove} aria-label={`Retirer « ${name} »`}>
-              <X />
-            </Button>
-          </Tooltip>
+          {removeButton(`« ${name} »`)}
         </div>
       </div>
-
-      {track.status === "error" && <p className="text-sm text-destructive">{track.error}</p>}
 
       {track.status === "ready" && (
         <div className="flex flex-col gap-3 select-none">
