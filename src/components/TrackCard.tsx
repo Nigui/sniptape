@@ -304,6 +304,9 @@ export function TrackCard({ track, onChange, onRemove }: Props) {
       ref={cardRef}
       aria-keyshortcuts={SHORTCUTS}
       onKeyDown={onKeyDown}
+      onFocus={(e) => {
+        if (e.target !== e.currentTarget && !(e.target instanceof HTMLInputElement)) cardRef.current?.focus();
+      }}
       className={cn(cardClass, "flex flex-col gap-4 p-4")}
     >
       <div className="flex items-center gap-4">
