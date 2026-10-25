@@ -41,6 +41,16 @@ const pct = (t: number, duration: number) => (duration > 0 ? (t / duration) * 10
 
 const MIN_LENGTH = 0.5;
 
+const isMac = navigator.userAgent.includes("Mac");
+const MOD = isMac ? "⌘" : "Ctrl+";
+const REMOVE_KEY = isMac ? "⌘⌫" : "Ctrl+Suppr";
+const SHORTCUTS = ["Space", "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "T", "A"]
+  .concat(["ArrowLeft", "ArrowRight", "Enter", isMac ? "Backspace" : "Delete"].map((k) => `${isMac ? "Meta" : "Control"}+${k}`))
+  .join(" ");
+const isMod = (e: React.KeyboardEvent) => (isMac ? e.metaKey : e.ctrlKey);
+const isRemove = (e: React.KeyboardEvent) => isMod(e) && (e.key === "Backspace" || e.key === "Delete");
+const cardClass = "rounded-2xl bg-card shadow-card outline-none focus-visible:ring-2 focus-visible:ring-primary-ui";
+
 function PositionField({ value, label, onCommit }: { value: number; label: string; onCommit: (t: number) => void }) {
   const [text, setText] = useState(formatTime(value));
   const [editing, setEditing] = useState(false);
@@ -56,6 +66,7 @@ function PositionField({ value, label, onCommit }: { value: number; label: strin
 
   return (
     <Input
+      tabIndex={-1}
       value={text}
       inputMode="decimal"
       aria-label={`${label} (flèches : ±0,1 s, Maj : ±1 s)`}
@@ -109,6 +120,12 @@ export function TrackCard({ track, onChange, onRemove }: Props) {
   const [dragging, setDragging] = useState(false);
   const [settle, setSettle] = useState({ start: 0, end: 0 });
   const [position, setPosition] = useState(0);
+  const positionRef = useRef(0);
+  const cardRef = useRef<HTMLElement>(null);
+  const titleRef = useRef<HTMLInputElement>(null);
+  const artistRef = useRef<HTMLInputElement>(null);
+  const editStart = useRef("");
+  positionRef.current = position;
   const [advanced, setAdvanced] = useState(false);
   const onChangeRef = useRef(onChange);
   onChangeRef.current = onChange;
@@ -194,6 +211,7 @@ export function TrackCard({ track, onChange, onRemove }: Props) {
   const seek = (t: number) => {
     const clamped = Math.min(Math.max(0, t), track.duration);
     wave.current?.setTime(clamped);
+    positionRef.current = clamped;
     setPosition(clamped);
   };
 
@@ -205,6 +223,7 @@ export function TrackCard({ track, onChange, onRemove }: Props) {
   const sourceLabel = sourceUrl.replace("https://www.", "");
   const sourceLink = (
     <a
+      tabIndex={-1}
       href={sourceUrl}
       onClick={(e) => {
         e.preventDefault();
@@ -218,7 +237,16 @@ export function TrackCard({ track, onChange, onRemove }: Props) {
 
   if (track.status === "loading")
     return (
-      <article aria-busy className="relative flex items-center gap-3 overflow-hidden rounded-2xl bg-card py-2 pr-2 pl-4 shadow-card">
+      <article
+        tabIndex={0}
+        aria-busy
+        aria-keyshortcuts={isMac ? "Meta+Backspace" : "Control+Delete"}
+        onKeyDown={(e) => {
+          if (e.target !== e.currentTarget || !isRemove(e)) return;
+          e.preventDefault();
+          onRemove();
+        }}
+        className={cn(cardClass, "relative flex items-center gap-3 overflow-hidden py-2 pr-2 pl-4")}>
         <div
           role="progressbar"
           aria-label={`Extraction de ${sourceLabel}`}
@@ -230,7 +258,7 @@ export function TrackCard({ track, onChange, onRemove }: Props) {
         />
         <Loader2 className="relative size-4 shrink-0 text-primary-ui motion-safe:animate-spin" aria-hidden />
         {sourceLink}
-        <Button variant="ghost" size="icon" className="relative ml-auto" onClick={onRemove} aria-label={`Retirer ${sourceLabel}`}>
+        <Button tabIndex={-1} variant="ghost" size="icon" className="relative ml-auto" onClick={onRemove} aria-label={`Retirer ${sourceLabel}`}>
           <X />
         </Button>
       </article>
@@ -241,9 +269,43 @@ export function TrackCard({ track, onChange, onRemove }: Props) {
   const endSynced = Math.abs(position - track.end) < 0.05;
   const start = pct(track.start, track.duration);
   const end = pct(track.end, track.duration);
+  const canCutStart = !startSynced && position <= track.end - MIN_LENGTH;
+  const canCutEnd = !endSynced && position >= track.start + MIN_LENGTH;
+
+  const onKeyDown = (e: React.KeyboardEvent) => {
+    if (e.target !== e.currentTarget) return;
+    const key = e.key.toLowerCase();
+    const plain = !e.metaKey && !e.ctrlKey && !e.altKey;
+    if (isRemove(e)) onRemove();
+    else if (plain && (key === "t" || key === "a")) {
+      const input = (key === "t" ? titleRef : artistRef).current;
+      editStart.current = key === "t" ? track.title : track.artist;
+      input?.focus();
+      input?.select();
+    }
+    else if (track.status !== "ready") return;
+    else if (e.key === " ") togglePlay();
+    else if (e.key === "Enter" && isMod(e)) onChange({ selected: !track.selected });
+    else if (decoded && (e.key === "ArrowUp" || e.key === "ArrowDown")) seek(e.key === "ArrowUp" ? track.start : track.end);
+    else if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
+      if (!decoded) return;
+      const left = e.key === "ArrowLeft";
+      if (isMod(e)) {
+        if (left ? canCutStart : canCutEnd) setTrim(left ? "start" : "end", position);
+      } else seek(positionRef.current + (e.shiftKey ? 0.1 : 1) * (left ? -1 : 1));
+    } else return;
+    e.preventDefault();
+  };
 
   return (
-    <article className="flex flex-col gap-4 rounded-2xl bg-card p-4 shadow-card">
+    <article
+      tabIndex={0}
+      aria-label={name}
+      ref={cardRef}
+      aria-keyshortcuts={SHORTCUTS}
+      onKeyDown={onKeyDown}
+      className={cn(cardClass, "flex flex-col gap-4 p-4")}
+    >
       <div className="flex items-center gap-4">
         <div className="relative size-20 shrink-0 overflow-hidden rounded-xl bg-muted shadow-card">
           {track.cover ? (
@@ -254,20 +316,26 @@ export function TrackCard({ track, onChange, onRemove }: Props) {
         </div>
 
         <div className="flex min-w-0 flex-1 flex-col">
-          <Input
-            aria-label={`Titre de la piste « ${name} »`}
-            value={track.title}
-            placeholder="Titre"
-            onChange={(e) => onChange({ title: e.target.value })}
-            className={cn(fieldClass, "text-lg font-semibold md:text-lg")}
-          />
-          <Input
-            aria-label={`Artiste de la piste « ${name} »`}
-            value={track.artist}
-            placeholder="Artiste"
-            onChange={(e) => onChange({ artist: e.target.value })}
-            className={cn(fieldClass, "text-muted-foreground")}
-          />
+          {(["title", "artist"] as const).map((field) => (
+            <Tooltip key={field} className="flex" label={field === "title" ? "Modifier le titre (T)" : "Modifier l’artiste (A)"}>
+              <Input
+                ref={field === "title" ? titleRef : artistRef}
+                tabIndex={-1}
+                aria-label={`${field === "title" ? "Titre" : "Artiste"} de la piste « ${name} »`}
+                value={track[field]}
+                placeholder={field === "title" ? "Titre" : "Artiste"}
+                onFocus={() => (editStart.current = track[field])}
+                onChange={(e) => onChange({ [field]: e.target.value })}
+                onKeyDown={(e) => {
+                  if (e.key !== "Enter" && e.key !== "Escape") return;
+                  e.preventDefault();
+                  if (e.key === "Escape") onChange({ [field]: editStart.current });
+                  cardRef.current?.focus();
+                }}
+                className={cn(fieldClass, field === "title" ? "text-lg font-semibold md:text-lg" : "text-muted-foreground")}
+              />
+            </Tooltip>
+          ))}
           <div className="flex px-2">{sourceLink}</div>
         </div>
 
@@ -279,16 +347,21 @@ export function TrackCard({ track, onChange, onRemove }: Props) {
         )}
 
         <div className="flex shrink-0 items-center gap-1 self-start">
-          <Checkbox
-            checked={track.selected}
-            disabled={track.status !== "ready"}
-            onCheckedChange={(v) => onChange({ selected: v === true })}
-            aria-label={`Sélectionner « ${name} »`}
-            className="mx-2"
-          />
-          <Button variant="ghost" size="icon" onClick={onRemove} aria-label={`Retirer « ${name} »`}>
-            <X />
-          </Button>
+          <Tooltip label={`${track.selected ? "Désélectionner" : "Sélectionner"} (${MOD}Entrée)`}>
+            <Checkbox
+              tabIndex={-1}
+              checked={track.selected}
+              disabled={track.status !== "ready"}
+              onCheckedChange={(v) => onChange({ selected: v === true })}
+              aria-label={`Sélectionner « ${name} »`}
+              className="mx-2"
+            />
+          </Tooltip>
+          <Tooltip label={`Retirer (${REMOVE_KEY})`}>
+            <Button tabIndex={-1} variant="ghost" size="icon" onClick={onRemove} aria-label={`Retirer « ${name} »`}>
+              <X />
+            </Button>
+          </Tooltip>
         </div>
       </div>
 
@@ -297,14 +370,17 @@ export function TrackCard({ track, onChange, onRemove }: Props) {
       {track.status === "ready" && (
         <div className="flex flex-col gap-3 select-none">
           <div className="flex items-center gap-4">
-            <Button
-              size="icon-lg"
-              onClick={togglePlay}
-              aria-label={`${playing ? "Pause" : "Écouter"} « ${name} »`}
-              className="shrink-0 rounded-full"
-            >
-              {playing ? <Pause className="fill-current" /> : <Play className="fill-current" />}
-            </Button>
+            <Tooltip label={`${playing ? "Pause" : "Écouter"} (Espace)`}>
+              <Button
+                tabIndex={-1}
+                size="icon-lg"
+                onClick={togglePlay}
+                aria-label={`${playing ? "Pause" : "Écouter"} « ${name} »`}
+                className="shrink-0 rounded-full"
+              >
+                {playing ? <Pause className="fill-current" /> : <Play className="fill-current" />}
+              </Button>
+            </Tooltip>
             <div className="relative flex-1" role="group" aria-label={`Découpe de « ${name} »`}>
               {decoded && (
                 <div
@@ -328,6 +404,8 @@ export function TrackCard({ track, onChange, onRemove }: Props) {
           <div className="flex items-center gap-4">
             <div className="w-9 shrink-0" />
             <Slider
+              tabIndex={-1}
+              thumbLabel="Position (← →, Maj : ±0,1 s)"
               className="flex-1"
               min={0}
               max={track.duration || 1}
@@ -338,6 +416,7 @@ export function TrackCard({ track, onChange, onRemove }: Props) {
               aria-label={`Position de lecture de « ${name} »`}
             />
             <Button
+              tabIndex={-1}
               variant="ghost"
               size="icon-sm"
               className={cn("shrink-0", advanced ? "text-primary-ui" : "text-muted-foreground")}
@@ -354,15 +433,15 @@ export function TrackCard({ track, onChange, onRemove }: Props) {
               <span className="text-sm text-muted-foreground">Position</span>
               <PositionField value={position} label={`Position de lecture de « ${name} »`} onCommit={seek} />
               {[
-                { label: "Aller au début", icon: <ArrowLeftToLine />, disabled: startSynced, run: () => seek(track.start) },
-                { label: "Aller à la fin", icon: <ArrowRightToLine />, disabled: endSynced, run: () => seek(track.end) },
+                { label: "Aller au début", keys: "↑", icon: <ArrowLeftToLine />, disabled: startSynced, run: () => seek(track.start) },
+                { label: "Aller à la fin", keys: "↓", icon: <ArrowRightToLine />, disabled: endSynced, run: () => seek(track.end) },
                 null,
-                { label: "Couper avant", icon: <TrimStartIcon />, disabled: startSynced || position > track.end - MIN_LENGTH, run: () => setTrim("start", position) },
-                { label: "Couper après", icon: <TrimEndIcon />, disabled: endSynced || position < track.start + MIN_LENGTH, run: () => setTrim("end", position) },
+                { label: "Couper avant", keys: `${MOD}←`, icon: <TrimStartIcon />, disabled: !canCutStart, run: () => setTrim("start", position) },
+                { label: "Couper après", keys: `${MOD}→`, icon: <TrimEndIcon />, disabled: !canCutEnd, run: () => setTrim("end", position) },
               ].map((a, i) =>
                 a ? (
-                  <Tooltip key={a.label} label={a.label}>
-                    <Button variant="ghost" size="icon-sm" disabled={a.disabled} onClick={a.run} aria-label={a.label}>
+                  <Tooltip key={a.label} label={`${a.label} (${a.keys})`}>
+                    <Button tabIndex={-1} variant="ghost" size="icon-sm" disabled={a.disabled} onClick={a.run} aria-label={a.label}>
                       {a.icon}
                     </Button>
                   </Tooltip>

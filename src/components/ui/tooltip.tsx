@@ -2,12 +2,12 @@ import * as React from "react"
 import { cn } from "cn"
 import { Tooltip as TooltipPrimitive } from "radix-ui"
 
-function Tooltip({ children, label, side = "top" }: { children: React.ReactNode; label: string; side?: "top" | "bottom" }) {
+function Tooltip({ children, label, side = "top", className }: { children: React.ReactNode; label: string; side?: "top" | "bottom"; className?: string }) {
   return (
     <TooltipPrimitive.Provider delayDuration={300}>
       <TooltipPrimitive.Root>
         <TooltipPrimitive.Trigger asChild>
-          <span className="inline-flex">{children}</span>
+          <span className={cn("inline-flex", className)}>{children}</span>
         </TooltipPrimitive.Trigger>
         <TooltipPrimitive.Portal>
           <TooltipPrimitive.Content

@@ -1,6 +1,6 @@
 import * as React from "react"
 import { cn } from "cn"
-import { Slider as SliderPrimitive } from "radix-ui"
+import { Slider as SliderPrimitive, Tooltip as TooltipPrimitive } from "radix-ui"
 
 function Slider({
   className,
@@ -8,8 +8,10 @@ function Slider({
   value,
   min = 0,
   max = 100,
+  tabIndex,
+  thumbLabel,
   ...props
-}: React.ComponentProps<typeof SliderPrimitive.Root>) {
+}: React.ComponentProps<typeof SliderPrimitive.Root> & { thumbLabel?: string }) {
   const _values = React.useMemo(
     () =>
       Array.isArray(value)
@@ -42,13 +44,32 @@ function Slider({
           className="absolute bg-primary select-none data-horizontal:h-full data-vertical:w-full"
         />
       </SliderPrimitive.Track>
-      {Array.from({ length: _values.length }, (_, index) => (
-        <SliderPrimitive.Thumb
-          data-slot="slider-thumb"
-          key={index}
-          className="relative block size-3 shrink-0 rounded-full border border-ring bg-white ring-ring/50 transition-[color,box-shadow] select-none after:absolute after:-inset-2 hover:ring-3 focus-visible:ring-3 focus-visible:outline-hidden active:ring-3 disabled:pointer-events-none disabled:opacity-50"
-        />
-      ))}
+      {Array.from({ length: _values.length }, (_, index) => {
+        const thumb = (
+          <SliderPrimitive.Thumb
+            data-slot="slider-thumb"
+            key={index}
+            tabIndex={tabIndex}
+            className="relative block size-3 shrink-0 rounded-full border border-ring bg-white ring-ring/50 transition-[color,box-shadow] select-none after:absolute after:-inset-2 hover:ring-3 focus-visible:ring-3 focus-visible:outline-hidden active:ring-3 disabled:pointer-events-none disabled:opacity-50"
+          />
+        )
+        if (!thumbLabel) return thumb
+        return (
+          <TooltipPrimitive.Provider key={index} delayDuration={300}>
+            <TooltipPrimitive.Root>
+              <TooltipPrimitive.Trigger asChild>{thumb}</TooltipPrimitive.Trigger>
+              <TooltipPrimitive.Portal>
+                <TooltipPrimitive.Content
+                  sideOffset={6}
+                  className="z-50 rounded-full bg-foreground px-2.5 py-1 text-xs font-semibold text-background animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95"
+                >
+                  {thumbLabel}
+                </TooltipPrimitive.Content>
+              </TooltipPrimitive.Portal>
+            </TooltipPrimitive.Root>
+          </TooltipPrimitive.Provider>
+        )
+      })}
     </SliderPrimitive.Root>
   )
 }
